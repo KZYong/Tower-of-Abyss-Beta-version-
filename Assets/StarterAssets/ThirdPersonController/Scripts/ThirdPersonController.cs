@@ -98,12 +98,18 @@ namespace StarterAssets
         public int combo;
         public bool isAttack;
         public bool isJumpAttack;
+        public bool isGuard;
 
         public GameObject slashE1;
         public GameObject slashE2;
         public GameObject slashE3;
 
         public GameObject player;
+
+        public float targetSpeed;
+
+        PlayerStats PlayerS;
+
 
 		private void Awake()
 		{
@@ -127,7 +133,7 @@ namespace StarterAssets
 			_jumpTimeoutDelta = JumpTimeout;
 			_fallTimeoutDelta = FallTimeout;
 
-            
+            PlayerS = FindObjectOfType<PlayerStats>();
 		}
 
 		private void Update()
@@ -136,10 +142,12 @@ namespace StarterAssets
 
 
                 GroundedCheck();
-                Move();
 
-
-            JumpAndGravity();
+                if (isGuard == false)
+                {
+                    Move();
+                    JumpAndGravity();
+                }
 
             if (_playerInput.actions["Attack"].ReadValue<float>() ==1f && !isAttack)
             {
@@ -161,6 +169,23 @@ namespace StarterAssets
 
                 //GameObject eObject = Instantiate(effect1, transform.position, Quaternion.identity) as GameObject;
                 //Destroy(eObject, 3);
+            }
+
+            if (_playerInput.actions["Parry"].triggered)
+            {
+                if (Grounded == true && isAttack == false && PlayerS.Stamina >= 15f)
+                {
+                    isAttack = false;
+                    isGuard = true;
+                    _animator.Play("Guard");
+
+                    PlayerS.Stamina = PlayerS.Stamina - 7.5f;
+                }
+            }
+
+            if (_playerInput.actions["Sprint"].ReadValue<float>() >= 1f)
+            {
+                PlayerS.Stamina = PlayerS.Stamina - 0.3f;
             }
 
             
@@ -189,6 +214,11 @@ namespace StarterAssets
         public void EndJumpAttack()
         {
             isJumpAttack = false;
+        }
+
+        public void EndGuard()
+        {
+            isGuard = false;
         }
 
         private void Slash1()
@@ -256,7 +286,17 @@ namespace StarterAssets
 		private void Move()
 		{
 			// set target speed based on move speed, sprint speed and if sprint is pressed
-			float targetSpeed = _input.sprint ? SprintSpeed : MoveSpeed;
+            if (PlayerS.Stamina <= 0)
+            {
+                float targetSpeed1 = MoveSpeed;
+                targetSpeed = targetSpeed1;
+            }
+
+            if (PlayerS.Stamina > 1)
+            {
+                float targetSpeed2 = _input.sprint ? SprintSpeed : MoveSpeed;
+                targetSpeed = targetSpeed2;
+            }
 
 			// a simplistic acceleration and deceleration designed to be easy to remove, replace, or iterate upon
 

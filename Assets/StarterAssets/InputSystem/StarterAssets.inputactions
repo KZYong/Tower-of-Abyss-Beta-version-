@@ -44,6 +44,14 @@
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": ""
+                },
+                {
+                    "name": "Parry",
+                    "type": "Button",
+                    "id": "a3006470-387f-452c-a445-668300b4a74f",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": ""
                 }
             ],
             "bindings": [
@@ -231,6 +239,17 @@
                     "processors": "",
                     "groups": "KeyboardMouse",
                     "action": "Attack",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "075ea763-4a8c-4c61-a321-7e88d898d564",
+                    "path": "<Mouse>/rightButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "KeyboardMouse",
+                    "action": "Parry",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
