@@ -99,6 +99,8 @@ namespace StarterAssets
         public bool isAttack;
         public bool isJumpAttack;
         public bool isGuard;
+        public bool isHit;
+        public bool isHitAnim;
 
         public GameObject slashE1;
         public GameObject slashE2;
@@ -143,13 +145,13 @@ namespace StarterAssets
 
                 GroundedCheck();
 
-                if (isGuard == false)
+                if (isGuard == false && isHit == false)
                 {
                     Move();
                     JumpAndGravity();
                 }
 
-            if (_playerInput.actions["Attack"].ReadValue<float>() ==1f && !isAttack)
+            if (_playerInput.actions["Attack"].ReadValue<float>() ==1f && !isAttack && isHit == false)
             {
                 if (Grounded == true)
                 {
@@ -172,7 +174,7 @@ namespace StarterAssets
                 //Destroy(eObject, 3);
             }
 
-            if (_playerInput.actions["Parry"].ReadValue<float>() >= 1f)
+            if (_playerInput.actions["Parry"].ReadValue<float>() >= 1f && isHit == false)
             {
                 if (Grounded == true && PlayerS.Stamina >= 15f)
                 {
@@ -197,7 +199,15 @@ namespace StarterAssets
 
             if (_playerInput.actions["Sprint"].ReadValue<float>() >= 1f)
             {
+                if (isHit == false)
                 PlayerS.Stamina = PlayerS.Stamina - 0.3f;
+            }
+
+            if (isHitAnim == true)
+            {
+                _animator.Play("PlayerGetHit");
+
+                isHitAnim = false;
             }
 
             
@@ -233,6 +243,15 @@ namespace StarterAssets
             isGuard = false;
             _animator.SetTrigger("EndGuard");
         }
+
+        public void EndHit()
+        {
+            isHit = false;
+            isAttack = false;
+            combo = 0;
+        }
+
+
 
         private void Slash1()
         {

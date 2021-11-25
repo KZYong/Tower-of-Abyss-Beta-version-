@@ -113,8 +113,12 @@ public class Enemy1 : MonoBehaviour
 
             Debug.Log("Enemy is attacking!");
 
-            if (tpc.isGuard == false)
-              Player.Health = Player.Health - 10f;
+            if (tpc.isGuard == false && tpc.isHit == false)
+            {
+                Player.Health = Player.Health - 10f;
+                tpc.isHit = true;
+                tpc.isHitAnim = true;
+            }
 
             if (tpc.isGuard == true)
                 Debug.Log("PARRY!");
