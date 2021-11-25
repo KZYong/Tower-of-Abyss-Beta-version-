@@ -172,7 +172,7 @@ namespace StarterAssets
                 //Destroy(eObject, 3);
             }
 
-            if (_playerInput.actions["Parry"].triggered)
+            if (_playerInput.actions["Parry"].ReadValue<float>() >= 1f)
             {
                 if (Grounded == true && PlayerS.Stamina >= 15f)
                 {
@@ -187,8 +187,12 @@ namespace StarterAssets
                     isGuard = true;
                     _animator.Play("Guard");
 
-                    PlayerS.Stamina = PlayerS.Stamina - 5f;
+                    PlayerS.Stamina = PlayerS.Stamina - 0.1f;
                 }
+            }
+            else
+            {
+                EndGuard();
             }
 
             if (_playerInput.actions["Sprint"].ReadValue<float>() >= 1f)
@@ -227,6 +231,7 @@ namespace StarterAssets
         public void EndGuard()
         {
             isGuard = false;
+            _animator.SetTrigger("EndGuard");
         }
 
         private void Slash1()
