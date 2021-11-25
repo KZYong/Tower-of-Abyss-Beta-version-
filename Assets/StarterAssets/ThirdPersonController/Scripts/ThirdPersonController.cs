@@ -161,6 +161,7 @@ namespace StarterAssets
 
                 if (Grounded == false)
                 {
+                    isAttack = true;
                     _animator.Play("JumpAttack");
                   //_verticalVelocity = Mathf.Sqrt(JumpHeight * -0.1f * Gravity);
                     //_verticalVelocity += 10 * Gravity * Time.deltaTime;
@@ -173,13 +174,20 @@ namespace StarterAssets
 
             if (_playerInput.actions["Parry"].triggered)
             {
-                if (Grounded == true && isAttack == false && PlayerS.Stamina >= 15f)
+                if (Grounded == true && PlayerS.Stamina >= 15f)
                 {
+                    combo = 0;
+
+                    if (isAttack == true)
+                    {
+                        isAttack = false;
+                    }
+
                     isAttack = false;
                     isGuard = true;
                     _animator.Play("Guard");
 
-                    PlayerS.Stamina = PlayerS.Stamina - 7.5f;
+                    PlayerS.Stamina = PlayerS.Stamina - 5f;
                 }
             }
 
@@ -296,6 +304,11 @@ namespace StarterAssets
             {
                 float targetSpeed2 = _input.sprint ? SprintSpeed : MoveSpeed;
                 targetSpeed = targetSpeed2;
+            }
+
+            if (isAttack == true)
+            {
+                targetSpeed = 1f;
             }
 
 			// a simplistic acceleration and deceleration designed to be easy to remove, replace, or iterate upon
