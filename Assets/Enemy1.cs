@@ -28,6 +28,8 @@ public class Enemy1 : MonoBehaviour
     public bool playerInSightRange;
     public bool playerInAttackRange;
 
+    public GameObject parryEffect;
+
     PlayerStats Player;
 
     private StarterAssets.ThirdPersonController tpc;
@@ -121,7 +123,11 @@ public class Enemy1 : MonoBehaviour
             }
 
             if (tpc.isGuard == true)
+            {
                 Debug.Log("PARRY!");
+                GameObject pObject = Instantiate(parryEffect, new Vector3(player.position.x, (player.position.y + 1), player.position.z), Quaternion.Euler(new Vector3(90, Random.Range(0, 360), 0))) as GameObject;
+                Destroy(pObject, 1);
+            }
         }
     }
 
