@@ -41,9 +41,17 @@ public class HitBox : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
+        
+
         if (other.gameObject.tag == "Enemy" && HisAttack == true)
         {
-            //other.gameObject.GetComponent<Rigidbody>().AddExplosionForce(25f, transform.position, 5, 3.0f);
+            enemyRigidbody = other.gameObject.GetComponent<Rigidbody>();
+
+            //enemyRigidbody.AddForce(0, 0, 10, ForceMode.Impulse);
+
+            float step = -30 * Time.deltaTime;
+
+            other.transform.position = Vector3.MoveTowards(other.transform.position, player.transform.position, step);
 
 
             GameObject hObject = Instantiate(hiteffect, new Vector3(other.gameObject.transform.position.x, (player.transform.position.y + 1), other.gameObject.transform.position.z), Quaternion.Euler(new Vector3(90, Random.Range(0, 360), 0))) as GameObject;
