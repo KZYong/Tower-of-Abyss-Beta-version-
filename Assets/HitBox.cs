@@ -8,6 +8,9 @@ public class HitBox : MonoBehaviour
 
     private int _attackPower = 1;
 
+    public float Lattack;
+    public float Uattack;
+
     private bool _canAttack;
 
     private void OnEnable()
@@ -25,11 +28,19 @@ public class HitBox : MonoBehaviour
 
     public Rigidbody enemyRigidbody;
 
+    Enemy1 Enemy;
+    PlayerStats PlayerS;
+
+    public float LAttack;
+    public float UAttack;
+
 
     // Start is called before the first frame update
     void Start()
     {
         tpc = player.GetComponent<StarterAssets.ThirdPersonController>();
+
+        PlayerS = FindObjectOfType<PlayerStats>();
     }
 
     // Update is called once per frame
@@ -37,6 +48,9 @@ public class HitBox : MonoBehaviour
     {
         HisAttack = tpc.isAttack;
         HisJumpAttack = tpc.isJumpAttack;
+
+        LAttack = PlayerS.LowerAttackDamage;
+        UAttack = PlayerS.UpperAttackDamage;
     }
 
     private void OnTriggerEnter(Collider other)
@@ -58,6 +72,10 @@ public class HitBox : MonoBehaviour
             Destroy(hObject, 1);
             //hit.Damage(attackPower);
             //_canAttack = false;
+
+            Enemy = other.gameObject.GetComponent<Enemy1>();
+
+            Enemy.eHealth = Enemy.eHealth - Random.Range(LAttack, UAttack);
         }
 
         if (other.gameObject.tag == "Enemy" && HisJumpAttack == true)

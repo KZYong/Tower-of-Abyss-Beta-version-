@@ -30,6 +30,10 @@ public class Enemy1 : MonoBehaviour
 
     public GameObject parryEffect;
 
+    //Stats
+    public float eHealth = 100;
+    public float eMaxHealth = 100;
+
     PlayerStats Player;
 
     private StarterAssets.ThirdPersonController tpc;
