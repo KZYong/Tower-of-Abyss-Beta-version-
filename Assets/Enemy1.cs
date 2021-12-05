@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+using TMPro;
 
 public class Enemy1 : MonoBehaviour
 {
@@ -34,6 +35,12 @@ public class Enemy1 : MonoBehaviour
     public float eHealth = 100;
     public float eMaxHealth = 100;
 
+    public float eLA = 5f;
+    public float eUA = 15f;
+    public float eAttack;
+
+    public GameObject FloatingTextPrefab;
+
     PlayerStats Player;
 
     private StarterAssets.ThirdPersonController tpc;
@@ -63,6 +70,8 @@ public class Enemy1 : MonoBehaviour
         if (!playerInSightRange && !playerInAttackRange) Patroling();
         if (playerInSightRange && !playerInAttackRange) ChasePlayer();
         if (playerInSightRange && playerInAttackRange) AttackPlayer();
+
+        eAttack = Random.Range(eLA, eUA);
     }
 
     private void Patroling()
@@ -112,7 +121,7 @@ public class Enemy1 : MonoBehaviour
 
             var Renderer = this.GetComponent<Renderer>();
 
-            Renderer.material.SetColor("_Color", Color.red);
+            Renderer.material.SetColor("_Color", Color.magenta);
 
             alreadyAttacked = true;
             Invoke(nameof(ResetAttack), timeBetweenAttacks);
@@ -121,9 +130,12 @@ public class Enemy1 : MonoBehaviour
 
             if (tpc.isGuard == false && tpc.isHit == false)
             {
-                Player.Health = Player.Health - 10f;
+                Player.Health = Player.Health - eAttack;
                 tpc.isHit = true;
                 tpc.isHitAnim = true;
+
+                var go = Instantiate(FloatingTextPrefab, new Vector3((player.position.x), (player.position.y + 1), player.position.z), Quaternion.identity);
+                go.GetComponent<TextMeshPro>().text = eAttack.ToString("F0");
             }
 
             if (tpc.isGuard == true)

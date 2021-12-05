@@ -101,17 +101,19 @@ namespace StarterAssets
         public bool isGuard;
         public bool isHit;
         public bool isHitAnim;
+        public bool isDamage;
 
         public GameObject slashE1;
         public GameObject slashE2;
         public GameObject slashE3;
 
         public GameObject player;
+        public GameObject closeEnemy;
 
         public float targetSpeed;
 
         PlayerStats PlayerS;
-
+        ScanNearestEnemy NearestEnemy;
 
         private void Awake()
         {
@@ -136,14 +138,16 @@ namespace StarterAssets
             _fallTimeoutDelta = FallTimeout;
 
             PlayerS = FindObjectOfType<PlayerStats>();
+            NearestEnemy = FindObjectOfType<ScanNearestEnemy>();
         }
 
         private void Update()
         {
             _hasAnimator = TryGetComponent(out _animator);
 
+            closeEnemy = NearestEnemy.closestEnemy;
 
-            GroundedCheck();
+            GroundedCheck();  
 
             if (isGuard == false && isHit == false)
             {
@@ -200,7 +204,7 @@ namespace StarterAssets
             if (_playerInput.actions["Sprint"].ReadValue<float>() >= 1f)
             {
                 if (isHit == false && isGuard == false && isAttack == false)
-                    PlayerS.Stamina = PlayerS.Stamina - 0.3f;
+                    PlayerS.Stamina = PlayerS.Stamina - 0.15f;
             }
 
             if (isHitAnim == true)
@@ -251,6 +255,20 @@ namespace StarterAssets
             combo = 0;
         }
 
+        public void StartDamage()
+        {
+            isDamage = true;
+        }
+
+        public void EndDamage()
+        {
+            isDamage = false;
+        }
+
+        public void FaceEnemy()
+        {
+            //transform.LookAt(closeEnemy.gameObject.transform);
+        }
 
 
         private void Slash1()

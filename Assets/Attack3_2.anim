@@ -131632,8 +131632,15 @@ AnimationClip:
     floatParameter: 0
     intParameter: 0
     messageOptions: 0
-  - time: 0.8333333
-    functionName: CameraShake
+  - time: 0.76666665
+    functionName: StartDamage
+    data: 
+    objectReferenceParameter: {fileID: 0}
+    floatParameter: 0
+    intParameter: 0
+    messageOptions: 0
+  - time: 1.1666666
+    functionName: EndDamage
     data: 
     objectReferenceParameter: {fileID: 0}
     floatParameter: 0

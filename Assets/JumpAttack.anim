@@ -49480,6 +49480,13 @@ AnimationClip:
     floatParameter: 0
     intParameter: 0
     messageOptions: 0
+  - time: 0.2
+    functionName: StartDamage
+    data: 
+    objectReferenceParameter: {fileID: 0}
+    floatParameter: 0
+    intParameter: 0
+    messageOptions: 0
   - time: 0.23333333
     functionName: Slash1
     data: 
@@ -49489,6 +49496,13 @@ AnimationClip:
     messageOptions: 0
   - time: 0.46666667
     functionName: EndJumpAttack
+    data: 
+    objectReferenceParameter: {fileID: 0}
+    floatParameter: 0
+    intParameter: 0
+    messageOptions: 0
+  - time: 0.53333336
+    functionName: EndDamage
     data: 
     objectReferenceParameter: {fileID: 0}
     floatParameter: 0
