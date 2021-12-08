@@ -26,6 +26,6 @@ public class HealthBar : MonoBehaviour
     {
         CurrentHealth = Player.Health;
         HealthBars.fillAmount = CurrentHealth / MaxHealth;
-        PlayerHPNum.text = CurrentHealth.ToString("F0") + "/" + MaxHealth.ToString("F0");
+        PlayerHPNum.text = "<size=50>" + CurrentHealth.ToString("F0") + "</size>|" + MaxHealth.ToString("F0");
     }
 }

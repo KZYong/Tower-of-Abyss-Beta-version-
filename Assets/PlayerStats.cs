@@ -7,6 +7,8 @@ public class PlayerStats : MonoBehaviour
     public float Health = 100f;
     public float Stamina = 100f;
 
+    public float Defense = 5f;
+
     public float LowerAttackDamage = 1f;
     public float UpperAttackDamage = 5f;
 

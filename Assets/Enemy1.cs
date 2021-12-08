@@ -14,6 +14,9 @@ public class Enemy1 : MonoBehaviour
 
     public float health;
 
+    public GameObject EnemyModel;
+    public Animator enemyanim;
+
 
     //Patrol
     public Vector3 walkPoint;
@@ -29,29 +32,47 @@ public class Enemy1 : MonoBehaviour
     public bool playerInSightRange;
     public bool playerInAttackRange;
 
+    public bool isDamage;
+    public bool isAttacking;
+    public bool ECanAttack;
+    public bool isDeath;
+
     public GameObject parryEffect;
+
+    public GameObject EnemyWeapon;
 
     //Stats
     public float eHealth = 100;
     public float eMaxHealth = 100;
+    public float eDefense = 40;
 
     public float eLA = 5f;
     public float eUA = 15f;
     public float eAttack;
 
+    public float amountDamage;
+
+    public float damagetimer;
+
     public GameObject FloatingTextPrefab;
 
     PlayerStats Player;
+    public EnemyMech1 EM;
+    public EnemyHitBox1 EH;
 
     private StarterAssets.ThirdPersonController tpc;
 
-    
+    public float debugtimer;
 
     // Start is called before the first frame update
     void Start()
     {
         Player = FindObjectOfType<PlayerStats>();
         tpc = player.GetComponent<StarterAssets.ThirdPersonController>();
+
+        enemyanim = EnemyModel.GetComponent<Animator>();
+        EM = EnemyModel.GetComponent<EnemyMech1>();
+        EH = EnemyWeapon.GetComponent<EnemyHitBox1>();
     }
 
     private void Awake()
@@ -63,19 +84,86 @@ public class Enemy1 : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        debugtimer += Time.deltaTime;
+
+        if (debugtimer >= 10)
+        {
+            isAttacking = false;
+            debugtimer = 0;
+        }
+
+        ECanAttack = EH.EnemyCanAttack;
+
+        if (isDamage == true)
+        {
+            agent.updateRotation = true;
+
+            damagetimer += Time.deltaTime;
+            if (damagetimer >= 0.35)
+            {
+                isDamage = false;
+                damagetimer = 0;
+            }
+        }
+
+        if (eHealth <= 0)
+        {
+            enemyanim.Play("Death");
+            isDeath = true;
+            Destroy(this.gameObject, 3);
+        }
+
+        isAttacking = EM.isAttack;
+
         //Check for sight and attack range
         playerInSightRange = Physics.CheckSphere(transform.position, sightRange, whatIsPlayer);
         playerInAttackRange = Physics.CheckSphere(transform.position, attackRange, whatIsPlayer);
 
-        if (!playerInSightRange && !playerInAttackRange) Patroling();
-        if (playerInSightRange && !playerInAttackRange) ChasePlayer();
-        if (playerInSightRange && playerInAttackRange) AttackPlayer();
+        if (isDamage == false && isAttacking == false && isDeath == false)
+        {
+            if (!playerInSightRange && !playerInAttackRange) Patroling();
+            if (playerInSightRange && !playerInAttackRange) ChasePlayer();
+            if (playerInSightRange && playerInAttackRange) AttackPlayer();
+        }
 
         eAttack = Random.Range(eLA, eUA);
+
+        //Attacking
+
+        if (ECanAttack == true && isAttacking == true)
+        {
+
+            if (tpc.isGuard == false && tpc.isHit == false)
+            {
+                amountDamage = Player.Defense / 100;
+                amountDamage = eAttack * (1 - amountDamage);
+                Player.Health = Player.Health - amountDamage;
+                tpc.isHit = true;
+                tpc.isHitAnim = true;
+
+                var go = Instantiate(FloatingTextPrefab, new Vector3((player.position.x), (player.position.y + 1), player.position.z), Quaternion.identity);
+                go.GetComponent<TextMeshPro>().text = amountDamage.ToString("F0");
+
+                EH.EnemyCanAttack = false;
+            }
+
+            if (tpc.isGuard == true)
+            {
+                Debug.Log("PARRY!");
+                GameObject pObject = Instantiate(parryEffect, new Vector3(player.position.x, (player.position.y + 1), player.position.z), Quaternion.Euler(new Vector3(90, Random.Range(0, 360), 0))) as GameObject;
+                Destroy(pObject, 1);
+
+                EH.EnemyCanAttack = false;
+            }
+        }
     }
 
     private void Patroling()
     {
+        enemyanim.Play("Walk");
+
+        GetComponent<NavMeshAgent>().speed = 3;
+
         if (!walkPointSet) SearchWalkPoint();
 
         if (walkPointSet)
@@ -102,6 +190,17 @@ public class Enemy1 : MonoBehaviour
 
     private void ChasePlayer()
     {
+        if (!alreadyAttacked)
+        {
+        GetComponent<NavMeshAgent>().speed = 6;
+        enemyanim.Play("Run");
+        }
+
+        if (alreadyAttacked)
+        {
+            enemyanim.Play("Walk");
+        }
+
         agent.SetDestination(player.position);
     }
 
@@ -110,40 +209,30 @@ public class Enemy1 : MonoBehaviour
         agent.SetDestination(transform.position);
 
 
-
- 
+        if (alreadyAttacked)
+        {
+            GetComponent<NavMeshAgent>().speed = 3;
+        }
 
         if (!alreadyAttacked)
         {
             //Attack code here
 
-            transform.LookAt(player);
+            //transform.LookAt(player);
 
-            var Renderer = this.GetComponent<Renderer>();
+            enemyanim.Play("Attack");
+            agent.SetDestination(player.position);
 
-            Renderer.material.SetColor("_Color", Color.magenta);
+            //var Renderer = this.GetComponent<Renderer>();
+
+            //Renderer.material.SetColor("_Color", Color.magenta);
 
             alreadyAttacked = true;
             Invoke(nameof(ResetAttack), timeBetweenAttacks);
 
-            Debug.Log("Enemy is attacking!");
+            //Debug.Log("Enemy is attacking!");
 
-            if (tpc.isGuard == false && tpc.isHit == false)
-            {
-                Player.Health = Player.Health - eAttack;
-                tpc.isHit = true;
-                tpc.isHitAnim = true;
 
-                var go = Instantiate(FloatingTextPrefab, new Vector3((player.position.x), (player.position.y + 1), player.position.z), Quaternion.identity);
-                go.GetComponent<TextMeshPro>().text = eAttack.ToString("F0");
-            }
-
-            if (tpc.isGuard == true)
-            {
-                Debug.Log("PARRY!");
-                GameObject pObject = Instantiate(parryEffect, new Vector3(player.position.x, (player.position.y + 1), player.position.z), Quaternion.Euler(new Vector3(90, Random.Range(0, 360), 0))) as GameObject;
-                Destroy(pObject, 1);
-            }
         }
     }
 
@@ -154,6 +243,8 @@ public class Enemy1 : MonoBehaviour
         var Renderer = this.GetComponent<Renderer>();
 
         Renderer.material.SetColor("_Color", Color.white);
+
+        GetComponent<NavMeshAgent>().speed = 6;
     }
 
     public void TakeDamage(int damage)

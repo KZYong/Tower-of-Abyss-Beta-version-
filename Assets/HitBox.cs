@@ -33,18 +33,27 @@ public class HitBox : MonoBehaviour
     Enemy1 Enemy;
     PlayerStats PlayerS;
 
+    ComboNumber combonum;
+
     public float LAttack;
     public float UAttack;
+
+    public float enemyDef;
+    public float DefPercent;
 
     public bool canDamage;
 
     public float damagetaken;
+
+    public int combonumb;
 
 
     // Start is called before the first frame update
     void Start()
     {
         tpc = player.GetComponent<StarterAssets.ThirdPersonController>();
+
+        combonum = this.GetComponent<ComboNumber>();
 
         PlayerS = FindObjectOfType<PlayerStats>();
         
@@ -54,6 +63,8 @@ public class HitBox : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        combonumb = combonum.combonumber;
+
         HisAttack = tpc.isAttack;
         HisJumpAttack = tpc.isJumpAttack;
 
@@ -78,19 +89,48 @@ public class HitBox : MonoBehaviour
             other.transform.position = Vector3.MoveTowards(other.transform.position, player.transform.position, step);
 
 
-            GameObject hObject = Instantiate(hiteffect, new Vector3(other.gameObject.transform.position.x, (player.transform.position.y + 1), other.gameObject.transform.position.z), Quaternion.Euler(new Vector3(90, Random.Range(0, 360), 0))) as GameObject;
-            Destroy(hObject, 1);
+
 
             Enemy = other.gameObject.GetComponent<Enemy1>();
 
-            damagetaken = Random.Range(LAttack, UAttack);
 
-            Enemy.eHealth = Enemy.eHealth - damagetaken;
+            //take damage
+            if (Enemy.isDeath == false)
+            {
+                GameObject hObject = Instantiate(hiteffect, new Vector3(other.gameObject.transform.position.x, (player.transform.position.y + 1), other.gameObject.transform.position.z), Quaternion.Euler(new Vector3(90, Random.Range(0, 360), 0))) as GameObject;
+                Destroy(hObject, 1);
 
-            //floating text
-            var go = Instantiate(FloatingTextPrefab, new Vector3((other.gameObject.transform.position.x), (player.transform.position.y + 2), other.transform.position.z), Quaternion.identity);
-            //go.transform.position = go.transform.position - ((player.transform.forward/10));
-            go.GetComponent<TextMeshPro>().text = damagetaken.ToString("F0");
+                damagetaken = Random.Range(LAttack, UAttack);
+
+                enemyDef = Enemy.eDefense;
+                DefPercent = 1 - (enemyDef / 100);
+
+                damagetaken = damagetaken * DefPercent;
+
+                if (tpc.isThirdHit == true)
+                    damagetaken = damagetaken * 3;
+
+                Enemy.eHealth = Enemy.eHealth - damagetaken;
+
+                if (Enemy.isAttacking == false)
+                {
+                    Enemy.enemyanim.SetTrigger("Damaged");
+                    Enemy.isDamage = true;
+                }
+
+
+                //damage end
+
+                //floating text
+                var go = Instantiate(FloatingTextPrefab, new Vector3((other.gameObject.transform.position.x), (player.transform.position.y + 2), other.transform.position.z), Quaternion.identity);
+                go.GetComponent<TextMeshPro>().text = damagetaken.ToString("F0");
+
+                combonum.combonumber = combonum.combonumber + 1;
+                combonum.combotime = 0;
+                combonum.comboAnim.SetTrigger("ComboNumTrigger");
+
+                combonum.totaldamage = combonum.totaldamage + damagetaken;
+            }
         }
 
         if (other.gameObject.tag == "Enemy" && HisJumpAttack == true && canDamage == true)
@@ -99,17 +139,48 @@ public class HitBox : MonoBehaviour
 
             other.transform.position = Vector3.MoveTowards(other.transform.position, player.transform.position, step);
 
-            GameObject hObject = Instantiate(hiteffect, new Vector3(other.gameObject.transform.position.x, (player.transform.position.y + 1), other.gameObject.transform.position.z), Quaternion.Euler(new Vector3(90, Random.Range(0, 360), 0))) as GameObject;
-            Destroy(hObject, 1);
 
             Enemy = other.gameObject.GetComponent<Enemy1>();
 
-            Enemy.eHealth = Enemy.eHealth - Random.Range(LAttack, UAttack);
+            //take damage
+            if (Enemy.isDeath == false)
+            {
+                GameObject hObject = Instantiate(hiteffect, new Vector3(other.gameObject.transform.position.x, (player.transform.position.y + 1), other.gameObject.transform.position.z), Quaternion.Euler(new Vector3(90, Random.Range(0, 360), 0))) as GameObject;
+                Destroy(hObject, 1);
 
-            //floating text
-            var go = Instantiate(FloatingTextPrefab, new Vector3((other.gameObject.transform.position.x), (player.transform.position.y - 1), other.gameObject.transform.position.z), Quaternion.identity);
-            //go.transform.position = go.transform.position + (other.gameObject.transform.forward);
-            go.GetComponent<TextMeshPro>().text = damagetaken.ToString("F0");
+
+                damagetaken = Random.Range(LAttack, UAttack);
+
+                enemyDef = Enemy.eDefense;
+                DefPercent = 1 - (enemyDef / 100);
+
+                damagetaken = damagetaken * DefPercent;
+
+                if (tpc.isThirdHit == true)
+                    damagetaken = damagetaken * 3;
+
+                Enemy.eHealth = Enemy.eHealth - damagetaken;
+
+                if (Enemy.isAttacking == false)
+                {
+                    Enemy.enemyanim.SetTrigger("Damaged");
+                    Enemy.isDamage = true;
+                }
+
+
+                //damage end
+
+                //floating text
+                var go = Instantiate(FloatingTextPrefab, new Vector3((other.gameObject.transform.position.x), (player.transform.position.y - 1), other.gameObject.transform.position.z), Quaternion.identity);
+                //go.transform.position = go.transform.position + (other.gameObject.transform.forward);
+                go.GetComponent<TextMeshPro>().text = damagetaken.ToString("F0");
+
+                combonum.combonumber = combonum.combonumber + 1;
+                combonum.combotime = 0;
+                combonum.comboAnim.SetTrigger("ComboNumTrigger");
+
+                combonum.totaldamage = combonum.totaldamage + damagetaken;
+            }
         }
     }
 }

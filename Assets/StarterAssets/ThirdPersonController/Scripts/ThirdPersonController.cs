@@ -102,10 +102,16 @@ namespace StarterAssets
         public bool isHit;
         public bool isHitAnim;
         public bool isDamage;
+        public bool isThirdHit;
+        public bool isSkill;
+
+        public bool GuardLock;
 
         public GameObject slashE1;
         public GameObject slashE2;
         public GameObject slashE3;
+        public GameObject slashE4;
+        public GameObject slashE5;
 
         public GameObject player;
         public GameObject closeEnemy;
@@ -155,7 +161,17 @@ namespace StarterAssets
                 JumpAndGravity();
             }
 
-            if (_playerInput.actions["Attack"].ReadValue<float>() == 1f && !isAttack && isHit == false)
+            if (PlayerS.Stamina <= 15f)
+            {
+                GuardLock = true;
+            }
+
+            if (PlayerS.Stamina >= 40f)
+            {
+                GuardLock = false;
+            }
+
+            if (_playerInput.actions["Attack"].ReadValue<float>() == 1f && !isAttack && isHit == false && !isSkill)
             {
                 if (Grounded == true)
                 {
@@ -178,7 +194,17 @@ namespace StarterAssets
                 //Destroy(eObject, 3);
             }
 
-            if (_playerInput.actions["Parry"].ReadValue<float>() >= 1f && isHit == false)
+
+            if (_playerInput.actions["Skill1"].ReadValue<float>() == 1f && isHit == false)
+            {
+                if (Grounded == true)
+                {
+                    isAttack = true;
+                    _animator.Play("Attack3");
+                }
+            }
+
+            if (_playerInput.actions["Parry"].ReadValue<float>() >= 1f && isHit == false && GuardLock == false)
             {
                 if (Grounded == true && PlayerS.Stamina >= 15f)
                 {
@@ -190,10 +216,11 @@ namespace StarterAssets
                     }
 
                     isAttack = false;
+                    isSkill = false;
                     isGuard = true;
                     _animator.Play("Guard");
 
-                    PlayerS.Stamina = PlayerS.Stamina - 0.1f;
+                    PlayerS.Stamina = PlayerS.Stamina - 0.5f;
                 }
             }
             else
@@ -209,7 +236,11 @@ namespace StarterAssets
 
             if (isHitAnim == true)
             {
+               if (Grounded == true)
                 _animator.Play("PlayerGetHit");
+
+                if (Grounded == false)
+                   _animator.Play("Damage_Fly");
 
                 isHitAnim = false;
             }
@@ -252,6 +283,7 @@ namespace StarterAssets
         {
             isHit = false;
             isAttack = false;
+            isSkill = false;
             combo = 0;
         }
 
@@ -270,6 +302,25 @@ namespace StarterAssets
             //transform.LookAt(closeEnemy.gameObject.transform);
         }
 
+        public void StartThirdHit()
+        {
+            isThirdHit = true;
+        }
+
+        public void StopThirdHit()
+        {
+            isThirdHit = false;
+        }
+
+        private void StartSkill()
+        {
+            isSkill = true;
+        }
+
+        private void EndSkill()
+        {
+            isSkill = false;
+        }
 
         private void Slash1()
         {
@@ -287,6 +338,14 @@ namespace StarterAssets
         {
             GameObject seObject = Instantiate(slashE3, new Vector3(transform.position.x, (transform.position.y + 1), transform.position.z), Quaternion.Euler(-24, (player.transform.eulerAngles.y - 90), 0)) as GameObject;
             Destroy(seObject, 1);
+        }
+
+        private void Skill1Slash()
+        {
+            GameObject seObject = Instantiate(slashE4, new Vector3(transform.position.x, (transform.position.y + 1), transform.position.z), Quaternion.identity) as GameObject;
+            Destroy(seObject, 1);
+            GameObject se2Object = Instantiate(slashE5, new Vector3(transform.position.x, (transform.position.y), transform.position.z), Quaternion.identity) as GameObject;
+            Destroy(se2Object, 1);
         }
 
         private void LateUpdate()
