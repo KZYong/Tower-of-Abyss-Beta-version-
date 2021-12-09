@@ -21,6 +21,7 @@ public class HitBox : MonoBehaviour
 
     public GameObject player;
     public GameObject FloatingTextPrefab;
+    public GameObject FloatingTextPrefabCrit;
 
     private bool HisAttack;
 
@@ -37,11 +38,13 @@ public class HitBox : MonoBehaviour
 
     public float LAttack;
     public float UAttack;
+    public float CritRoll;
 
     public float enemyDef;
     public float DefPercent;
 
     public bool canDamage;
+    public bool isCrit;
 
     public float damagetaken;
 
@@ -107,6 +110,15 @@ public class HitBox : MonoBehaviour
 
                 damagetaken = damagetaken * DefPercent;
 
+                //crit test
+                CritRoll = Random.Range(1, 100);
+                if (CritRoll <= PlayerS.CritRate)
+                {
+                    damagetaken = damagetaken * 2;
+                    isCrit = true;
+                }
+                //
+
                 if (tpc.isThirdHit == true)
                     damagetaken = damagetaken * 3;
 
@@ -122,8 +134,18 @@ public class HitBox : MonoBehaviour
                 //damage end
 
                 //floating text
-                var go = Instantiate(FloatingTextPrefab, new Vector3((other.gameObject.transform.position.x), (player.transform.position.y + 2), other.transform.position.z), Quaternion.identity);
-                go.GetComponent<TextMeshPro>().text = damagetaken.ToString("F0");
+                if (isCrit == false)
+                {
+                    var go = Instantiate(FloatingTextPrefab, new Vector3((other.gameObject.transform.position.x), (player.transform.position.y + 2), other.transform.position.z), Quaternion.identity);
+                    go.GetComponent<TextMeshPro>().text = damagetaken.ToString("F0");
+                }
+
+                if (isCrit == true)
+                {
+                    var go = Instantiate(FloatingTextPrefabCrit, new Vector3((other.gameObject.transform.position.x), (player.transform.position.y + 2), other.transform.position.z), Quaternion.identity);
+                    go.GetComponent<TextMeshPro>().text = damagetaken.ToString("F0");
+                    isCrit = false;
+                }
 
                 combonum.combonumber = combonum.combonumber + 1;
                 combonum.combotime = 0;

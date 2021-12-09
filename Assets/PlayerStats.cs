@@ -8,6 +8,7 @@ public class PlayerStats : MonoBehaviour
     public float Stamina = 100f;
 
     public float Defense = 5f;
+    public float CritRate = 5f;
 
     public float LowerAttackDamage = 1f;
     public float UpperAttackDamage = 5f;
