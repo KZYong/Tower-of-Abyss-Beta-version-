@@ -94,16 +94,16 @@ public class Enemy1 : MonoBehaviour
         }
 
         if (PlayerDetected == false)
-            sightRange = 4;
+            sightRange = 5;
 
 
-        debugtimer += Time.deltaTime;
+       /// debugtimer += Time.deltaTime;
 
-        if (debugtimer >= 10)
-        {
-            isAttacking = false;
-            debugtimer = 0;
-        }
+      //  if (debugtimer >= 10)
+      //  {
+    //       isAttacking = false;
+     //       debugtimer = 0;
+    //    }
 
         ECanAttack = EH.EnemyCanAttack;
 
