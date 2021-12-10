@@ -36,6 +36,7 @@ public class Enemy1 : MonoBehaviour
     public bool isAttacking;
     public bool ECanAttack;
     public bool isDeath;
+    public bool PlayerDetected;
 
     public GameObject parryEffect;
 
@@ -61,6 +62,7 @@ public class Enemy1 : MonoBehaviour
     public EnemyHitBox1 EH;
 
     private StarterAssets.ThirdPersonController tpc;
+    private CountEnemy EnemyCounter;
 
     public float debugtimer;
 
@@ -73,6 +75,8 @@ public class Enemy1 : MonoBehaviour
         enemyanim = EnemyModel.GetComponent<Animator>();
         EM = EnemyModel.GetComponent<EnemyMech1>();
         EH = EnemyWeapon.GetComponent<EnemyHitBox1>();
+
+        EnemyCounter = FindObjectOfType<CountEnemy>();
     }
 
     private void Awake()
@@ -84,6 +88,15 @@ public class Enemy1 : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (PlayerDetected == true)
+        {
+            sightRange = 8;
+        }
+
+        if (PlayerDetected == false)
+            sightRange = 4;
+
+
         debugtimer += Time.deltaTime;
 
         if (debugtimer >= 10)
@@ -98,6 +111,11 @@ public class Enemy1 : MonoBehaviour
         {
             agent.updateRotation = true;
 
+            //transform.LookAt(player.transform);
+
+            var rotationAngle = Quaternion.LookRotation(player.position - transform.position);
+            transform.rotation = Quaternion.Slerp(transform.rotation, rotationAngle, Time.deltaTime * 5);
+
             damagetimer += Time.deltaTime;
             if (damagetimer >= 0.35)
             {
@@ -110,6 +128,12 @@ public class Enemy1 : MonoBehaviour
         {
             enemyanim.Play("Death");
             isDeath = true;
+
+            if (PlayerDetected)
+            {
+                EnemyCounter.EnemyCount -= 1;
+                PlayerDetected = false;
+            }
             Destroy(this.gameObject, 3);
         }
 
@@ -130,7 +154,13 @@ public class Enemy1 : MonoBehaviour
 
         //Attacking
 
-        if (ECanAttack == true && isAttacking == true)
+        if (isAttacking == true)
+        {
+            var rotationAngle = Quaternion.LookRotation(player.position - transform.position);
+            transform.rotation = Quaternion.Slerp(transform.rotation, rotationAngle, Time.deltaTime * 5);
+        }
+
+        if (ECanAttack == true && isAttacking == true && isDeath == false)
         {
 
             if (tpc.isGuard == false && tpc.isHit == false)
@@ -160,6 +190,14 @@ public class Enemy1 : MonoBehaviour
 
     private void Patroling()
     {
+        if (PlayerDetected)
+        {
+            EnemyCounter.EnemyCount -= 1;
+            PlayerDetected = false;
+
+            eHealth = eMaxHealth;
+        }
+
         enemyanim.Play("Walk");
 
         GetComponent<NavMeshAgent>().speed = 3;
@@ -190,6 +228,12 @@ public class Enemy1 : MonoBehaviour
 
     private void ChasePlayer()
     {
+        if (!PlayerDetected)
+        EnemyCounter.EnemyCount += 1;
+
+        PlayerDetected = true;
+    
+
         if (!alreadyAttacked)
         {
         GetComponent<NavMeshAgent>().speed = 6;
@@ -220,8 +264,10 @@ public class Enemy1 : MonoBehaviour
 
             //transform.LookAt(player);
 
+
+
             enemyanim.Play("Attack");
-            agent.SetDestination(player.position);
+            //agent.SetDestination(player.position);
 
             //var Renderer = this.GetComponent<Renderer>();
 

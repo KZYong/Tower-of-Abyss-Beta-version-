@@ -28,7 +28,7 @@ public class EnemyHitBox1 : MonoBehaviour
 
         if (Hit == false)
         {
-          //  EnemyCanAttack = false;
+           EnemyCanAttack = false;
         }
     }
 

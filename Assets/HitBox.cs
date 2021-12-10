@@ -89,7 +89,7 @@ public class HitBox : MonoBehaviour
 
             float step = -30 * Time.deltaTime;
 
-            other.transform.position = Vector3.MoveTowards(other.transform.position, player.transform.position, step);
+            //other.transform.position = Vector3.MoveTowards(other.transform.position, player.transform.position, step);
 
 
 
@@ -143,7 +143,7 @@ public class HitBox : MonoBehaviour
                 if (isCrit == true)
                 {
                     var go = Instantiate(FloatingTextPrefabCrit, new Vector3((other.gameObject.transform.position.x), (player.transform.position.y + 2), other.transform.position.z), Quaternion.identity);
-                    go.GetComponent<TextMeshPro>().text = damagetaken.ToString("F0");
+                    go.GetComponent<TextMeshPro>().text = damagetaken.ToString("F0") + "<size=%25>critical!</size>";
                     isCrit = false;
                 }
 

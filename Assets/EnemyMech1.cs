@@ -8,13 +8,17 @@ public class EnemyMech1 : MonoBehaviour
     public bool isAttackHit;
 
     public GameObject MainEnemy;
+    public GameObject EnemyWeapon;
 
     Enemy1 Enemy;
+    public EnemyHitBox1 EH;
+    
 
     // Start is called before the first frame update
     void Start()
     {
         Enemy = MainEnemy.GetComponent<Enemy1>();
+        EH = EnemyWeapon.GetComponent<EnemyHitBox1>();
     }
 
     // Update is called once per frame
@@ -48,5 +52,10 @@ public class EnemyMech1 : MonoBehaviour
     {
         Enemy.isAttacking = false;
         isAttack = false;
+    }
+
+    public void DebugAttack()
+    {
+        EH.EnemyCanAttack = false;
     }
 }

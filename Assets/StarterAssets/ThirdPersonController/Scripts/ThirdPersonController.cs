@@ -121,6 +121,8 @@ namespace StarterAssets
         PlayerStats PlayerS;
         ScanNearestEnemy NearestEnemy;
 
+        private CountEnemy ECounter;
+
         private void Awake()
         {
             // get a reference to our main camera
@@ -132,6 +134,7 @@ namespace StarterAssets
 
         private void Start()
         {
+            ECounter = FindObjectOfType<CountEnemy>();
             _hasAnimator = TryGetComponent(out _animator);
             _controller = GetComponent<CharacterController>();
             _input = GetComponent<StarterAssetsInputs>();
