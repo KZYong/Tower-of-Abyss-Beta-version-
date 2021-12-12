@@ -130,7 +130,7 @@ public class Enemy1 : MonoBehaviour
             transform.rotation = Quaternion.Slerp(transform.rotation, rotationAngle, Time.deltaTime * 5);
 
             damagetimer += Time.deltaTime;
-            if (damagetimer >= 0.35)
+            if (damagetimer >= 0.25)
             {
                 isDamage = false;
                 damagetimer = 0;
@@ -176,7 +176,7 @@ public class Enemy1 : MonoBehaviour
         if (ECanAttack == true && isAttacking == true && isDeath == false)
         {
 
-            if (tpc.isGuard == false && tpc.isHit == false)
+            if (tpc.isGuard == false && tpc.isHit == false && tpc.PlayerDeath == false)
             {
                 amountDamage = Player.Defense / 100;
                 amountDamage = eAttack * (1 - amountDamage);

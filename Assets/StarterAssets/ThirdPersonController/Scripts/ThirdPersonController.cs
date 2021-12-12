@@ -127,6 +127,9 @@ namespace StarterAssets
         PlayerStats PlayerS;
         ScanNearestEnemy NearestEnemy;
 
+        public bool PlayerDeath;
+        public bool DeathAnim;
+
         private CountEnemy ECounter;
 
         private void Awake()
@@ -160,6 +163,20 @@ namespace StarterAssets
 
         private void Update()
         {
+            if (PlayerS.Health <= 0 && DeathAnim == false)
+            {
+                PlayerDeath = true;
+                _animator.SetTrigger("Death");
+                DeathAnim = true;
+            }
+
+            if (PlayerDeath)
+            {
+                LockAction = true;
+                LockCameraPosition = true;
+                Cursor.lockState = CursorLockMode.None;
+            }
+
             CursorTimer += Time.deltaTime;
 
             if (_playerInput.actions["CursorLock"].ReadValue<float>() == 1f)
@@ -189,7 +206,7 @@ namespace StarterAssets
 
             GroundedCheck();  
 
-            if (isGuard == false && isHit == false)
+            if (isGuard == false && isHit == false && PlayerDeath == false)
             {
                 Move();
                 JumpAndGravity();

@@ -53,6 +53,9 @@ public class HitBox : MonoBehaviour
     public AudioSource HitSound;
     public AudioSource CritSound;
 
+    public bool AttackDone;
+    public float AttackCD;
+
 
     // Start is called before the first frame update
     void Start()
@@ -69,6 +72,13 @@ public class HitBox : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (AttackDone)
+            AttackCD += Time.deltaTime;
+        if (!AttackDone)
+            AttackCD = 0;
+        if (AttackCD > 0.25)
+            AttackDone = false;
+
         combonumb = combonum.combonumber;
 
         HisAttack = tpc.isAttack;
@@ -101,7 +111,7 @@ public class HitBox : MonoBehaviour
 
 
             //take damage
-            if (Enemy.isDeath == false)
+            if (Enemy.isDeath == false && !AttackDone)
             {
                
 
@@ -161,6 +171,8 @@ public class HitBox : MonoBehaviour
                 combonum.comboAnim.SetTrigger("ComboNumTrigger");
 
                 combonum.totaldamage = combonum.totaldamage + damagetaken;
+
+                AttackDone = true;
             }
         }
 

@@ -8,7 +8,7 @@ public class HealthBar : MonoBehaviour
 {
     private Image HealthBars;
     public float CurrentHealth;
-    private float MaxHealth = 100f;
+    private float MaxHP;
     PlayerStats Player;
 
     public TextMeshProUGUI PlayerHPNum;
@@ -25,7 +25,8 @@ public class HealthBar : MonoBehaviour
     void Update()
     {
         CurrentHealth = Player.Health;
-        HealthBars.fillAmount = CurrentHealth / MaxHealth;
-        PlayerHPNum.text = "<size=50>" + CurrentHealth.ToString("F0") + "</size>|" + MaxHealth.ToString("F0");
+        MaxHP = Player.MaxHealth;
+        HealthBars.fillAmount = CurrentHealth / MaxHP;
+        PlayerHPNum.text = "<size=50>" + CurrentHealth.ToString("F0") + "</size>|" + MaxHP.ToString("F0");
     }
 }
