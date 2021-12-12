@@ -105,7 +105,13 @@ namespace StarterAssets
         public bool isThirdHit;
         public bool isSkill;
 
+        public bool CursorLocked;
+
         public bool GuardLock;
+
+        public bool LockAction;
+
+        public float CursorTimer;
 
         public GameObject slashE1;
         public GameObject slashE2;
@@ -148,10 +154,35 @@ namespace StarterAssets
 
             PlayerS = FindObjectOfType<PlayerStats>();
             NearestEnemy = FindObjectOfType<ScanNearestEnemy>();
+
+            CursorLocked = true;
         }
 
         private void Update()
         {
+            CursorTimer += Time.deltaTime;
+
+            if (_playerInput.actions["CursorLock"].ReadValue<float>() == 1f)
+                if (CursorLocked && CursorTimer > 1)
+                {
+                    Cursor.lockState = CursorLockMode.None;
+                    CursorLocked = false;
+                    CursorTimer = 0;
+                    
+                    LockCameraPosition = true;
+                    LockAction = true;
+                }
+
+            if (_playerInput.actions["CursorLock"].ReadValue<float>() == 1f)
+                if (!CursorLocked && CursorTimer > 1)
+                {
+                    CursorLocked = true;
+                    Cursor.lockState = CursorLockMode.Locked;
+                    CursorTimer = 0;
+                    LockCameraPosition = false;
+                    LockAction = false;
+                }
+
             _hasAnimator = TryGetComponent(out _animator);
 
             closeEnemy = NearestEnemy.closestEnemy;
@@ -174,7 +205,7 @@ namespace StarterAssets
                 GuardLock = false;
             }
 
-            if (_playerInput.actions["Attack"].ReadValue<float>() == 1f && !isAttack && isHit == false && !isSkill)
+            if (_playerInput.actions["Attack"].ReadValue<float>() == 1f && !isAttack && isHit == false && !isSkill && !LockAction)
             {
                 if (Grounded == true)
                 {
@@ -198,7 +229,7 @@ namespace StarterAssets
             }
 
 
-            if (_playerInput.actions["Skill1"].ReadValue<float>() == 1f && isHit == false)
+            if (_playerInput.actions["Skill1"].ReadValue<float>() == 1f && isHit == false && !LockAction)
             {
                 if (Grounded == true)
                 {
@@ -207,7 +238,7 @@ namespace StarterAssets
                 }
             }
 
-            if (_playerInput.actions["Parry"].ReadValue<float>() >= 1f && isHit == false && GuardLock == false)
+            if (_playerInput.actions["Parry"].ReadValue<float>() >= 1f && isHit == false && GuardLock == false && !LockAction)
             {
                 if (Grounded == true && PlayerS.Stamina >= 15f)
                 {
@@ -233,7 +264,7 @@ namespace StarterAssets
 
             if (_playerInput.actions["Sprint"].ReadValue<float>() >= 1f)
             {
-                if (isHit == false && isGuard == false && isAttack == false)
+                if (isHit == false && isGuard == false && isAttack == false && !LockAction)
                     PlayerS.Stamina = PlayerS.Stamina - 0.15f;
             }
 

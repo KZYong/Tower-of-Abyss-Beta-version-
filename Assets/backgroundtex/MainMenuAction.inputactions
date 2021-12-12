@@ -1,0 +1,44 @@
+{
+    "name": "MainMenuAction",
+    "maps": [
+        {
+            "name": "MainMenu",
+            "id": "19e3d0ac-14d6-4cce-b80b-342cd41a9fe3",
+            "actions": [
+                {
+                    "name": "PressAnyKey",
+                    "type": "Value",
+                    "id": "c959443d-4375-488c-8bce-29894c646c77",
+                    "expectedControlType": "Vector2",
+                    "processors": "",
+                    "interactions": ""
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "44584445-8af8-41c6-b62b-e7b95c4620a5",
+                    "path": "<Keyboard>/anyKey",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "PressAnyKey",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "f757a310-baf6-477c-b6a0-a2c4730dd388",
+                    "path": "<Gamepad>/buttonEast",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "PressAnyKey",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        }
+    ],
+    "controlSchemes": []
+}

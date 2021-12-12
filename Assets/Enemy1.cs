@@ -57,6 +57,9 @@ public class Enemy1 : MonoBehaviour
 
     public GameObject FloatingTextPrefab;
 
+    public AudioSource ParrySound;
+    public AudioSource EnemyHit;
+
     PlayerStats Player;
     public EnemyMech1 EM;
     public EnemyHitBox1 EH;
@@ -65,6 +68,9 @@ public class Enemy1 : MonoBehaviour
     private CountEnemy EnemyCounter;
 
     public float debugtimer;
+
+    private float parrytimer;
+    private bool parrytimesound;
 
     // Start is called before the first frame update
     void Start()
@@ -88,6 +94,13 @@ public class Enemy1 : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (!parrytimesound)
+            parrytimer = 0;
+        if (parrytimesound)
+            parrytimer += Time.deltaTime;
+        if (parrytimer > 0.5)
+            parrytimesound = false;
+
         if (PlayerDetected == true)
         {
             sightRange = 8;
@@ -174,6 +187,8 @@ public class Enemy1 : MonoBehaviour
                 var go = Instantiate(FloatingTextPrefab, new Vector3((player.position.x), (player.position.y + 1), player.position.z), Quaternion.identity);
                 go.GetComponent<TextMeshPro>().text = amountDamage.ToString("F0");
 
+                EnemyHit.Play();
+
                 EH.EnemyCanAttack = false;
             }
 
@@ -182,6 +197,9 @@ public class Enemy1 : MonoBehaviour
                 Debug.Log("PARRY!");
                 GameObject pObject = Instantiate(parryEffect, new Vector3(player.position.x, (player.position.y + 1), player.position.z), Quaternion.Euler(new Vector3(90, Random.Range(0, 360), 0))) as GameObject;
                 Destroy(pObject, 1);
+
+                if (!parrytimesound)
+                ParrySound.Play();
 
                 EH.EnemyCanAttack = false;
             }

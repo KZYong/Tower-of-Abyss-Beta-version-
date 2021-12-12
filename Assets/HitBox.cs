@@ -50,6 +50,9 @@ public class HitBox : MonoBehaviour
 
     public int combonumb;
 
+    public AudioSource HitSound;
+    public AudioSource CritSound;
+
 
     // Start is called before the first frame update
     void Start()
@@ -100,6 +103,8 @@ public class HitBox : MonoBehaviour
             //take damage
             if (Enemy.isDeath == false)
             {
+               
+
                 GameObject hObject = Instantiate(hiteffect, new Vector3(other.gameObject.transform.position.x, (player.transform.position.y + 1), other.gameObject.transform.position.z), Quaternion.Euler(new Vector3(90, Random.Range(0, 360), 0))) as GameObject;
                 Destroy(hObject, 1);
 
@@ -130,7 +135,11 @@ public class HitBox : MonoBehaviour
                     Enemy.isDamage = true;
                 }
 
+                if (isCrit)
+                    CritSound.Play();
 
+                if (!isCrit)
+                    HitSound.Play();
                 //damage end
 
                 //floating text
@@ -167,6 +176,8 @@ public class HitBox : MonoBehaviour
             //take damage
             if (Enemy.isDeath == false)
             {
+                HitSound.Play();
+
                 GameObject hObject = Instantiate(hiteffect, new Vector3(other.gameObject.transform.position.x, (player.transform.position.y + 1), other.gameObject.transform.position.z), Quaternion.Euler(new Vector3(90, Random.Range(0, 360), 0))) as GameObject;
                 Destroy(hObject, 1);
 
