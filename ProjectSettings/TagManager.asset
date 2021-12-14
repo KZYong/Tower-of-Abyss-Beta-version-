@@ -7,6 +7,7 @@ TagManager:
   - CinemachineTarget
   - Collide
   - Enemy
+  - EnemyInRange
   layers:
   - Default
   - TransparentFX

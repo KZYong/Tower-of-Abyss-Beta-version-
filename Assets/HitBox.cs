@@ -7,21 +7,13 @@ public class HitBox : MonoBehaviour
 {
     public GameObject hiteffect;
 
-    private int _attackPower = 1;
-
     public float Lattack;
     public float Uattack;
-
-    private bool _canAttack;
-
-    private void OnEnable()
-    {
-        _canAttack = true;
-    }
 
     public GameObject player;
     public GameObject FloatingTextPrefab;
     public GameObject FloatingTextPrefabCrit;
+    public GameObject FloatingTextPrefabDefDown;
 
     private bool HisAttack;
 
@@ -46,15 +38,20 @@ public class HitBox : MonoBehaviour
     public bool canDamage;
     public bool isCrit;
 
+    public bool isSkill;
+
     public float damagetaken;
 
     public int combonumb;
 
     public AudioSource HitSound;
     public AudioSource CritSound;
+    public AudioSource DebuffSound;
 
     public bool AttackDone;
     public float AttackCD;
+
+    public GameObject TargetEnemy;
 
 
     // Start is called before the first frame update
@@ -76,7 +73,7 @@ public class HitBox : MonoBehaviour
             AttackCD += Time.deltaTime;
         if (!AttackDone)
             AttackCD = 0;
-        if (AttackCD > 0.25)
+        if (AttackCD > 0.15) 
             AttackDone = false;
 
         combonumb = combonum.combonumber;
@@ -92,140 +89,107 @@ public class HitBox : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        
-
-        if (other.gameObject.tag == "Enemy" && HisAttack == true && canDamage == true)
+        if (other.gameObject.tag == "EnemyInRange" && HisAttack == true && canDamage == true)
         {
-            enemyRigidbody = other.gameObject.GetComponent<Rigidbody>();
-
-            //enemyRigidbody.AddForce(0, 0, 10, ForceMode.Impulse);
-
-            float step = -30 * Time.deltaTime;
-
-            //other.transform.position = Vector3.MoveTowards(other.transform.position, player.transform.position, step);
-
-
-
-
-            Enemy = other.gameObject.GetComponent<Enemy1>();
-
-
-            //take damage
-            if (Enemy.isDeath == false && !AttackDone)
-            {
-               
-
-                GameObject hObject = Instantiate(hiteffect, new Vector3(other.gameObject.transform.position.x, (player.transform.position.y + 1), other.gameObject.transform.position.z), Quaternion.Euler(new Vector3(90, Random.Range(0, 360), 0))) as GameObject;
-                Destroy(hObject, 1);
-
-                damagetaken = Random.Range(LAttack, UAttack);
-
-                enemyDef = Enemy.eDefense;
-                DefPercent = 1 - (enemyDef / 100);
-
-                damagetaken = damagetaken * DefPercent;
-
-                //crit test
-                CritRoll = Random.Range(1, 100);
-                if (CritRoll <= PlayerS.CritRate)
-                {
-                    damagetaken = damagetaken * 2;
-                    isCrit = true;
-                }
-                //
-
-                if (tpc.isThirdHit == true)
-                    damagetaken = damagetaken * 3;
-
-                Enemy.eHealth = Enemy.eHealth - damagetaken;
-
-                if (Enemy.isAttacking == false)
-                {
-                    Enemy.enemyanim.SetTrigger("Damaged");
-                    Enemy.isDamage = true;
-                }
-
-                if (isCrit)
-                    CritSound.Play();
-
-                if (!isCrit)
-                    HitSound.Play();
-                //damage end
-
-                //floating text
-                if (isCrit == false)
-                {
-                    var go = Instantiate(FloatingTextPrefab, new Vector3((other.gameObject.transform.position.x), (player.transform.position.y + 2), other.transform.position.z), Quaternion.identity);
-                    go.GetComponent<TextMeshPro>().text = damagetaken.ToString("F0");
-                }
-
-                if (isCrit == true)
-                {
-                    var go = Instantiate(FloatingTextPrefabCrit, new Vector3((other.gameObject.transform.position.x), (player.transform.position.y + 2), other.transform.position.z), Quaternion.identity);
-                    go.GetComponent<TextMeshPro>().text = damagetaken.ToString("F0") + "<size=%25>critical!</size>";
-                    isCrit = false;
-                }
-
-                combonum.combonumber = combonum.combonumber + 1;
-                combonum.combotime = 0;
-                combonum.comboAnim.SetTrigger("ComboNumTrigger");
-
-                combonum.totaldamage = combonum.totaldamage + damagetaken;
-
-                AttackDone = true;
-            }
+            TargetEnemy = other.gameObject;
+            DamageEnemy();
         }
 
-        if (other.gameObject.tag == "Enemy" && HisJumpAttack == true && canDamage == true)
+        if (other.gameObject.tag == "EnemyInRange" && HisJumpAttack == true && canDamage == true)
         {
-            float step = -30 * Time.deltaTime;
+            TargetEnemy = other.gameObject;
+            DamageEnemy();
+        }
+    }
 
-            other.transform.position = Vector3.MoveTowards(other.transform.position, player.transform.position, step);
+    public void DamageEnemy()
+    {
+        enemyRigidbody = TargetEnemy.GetComponent<Rigidbody>();
+
+        float step = -30 * Time.deltaTime;
+
+        Enemy = TargetEnemy.GetComponent<Enemy1>();
 
 
-            Enemy = other.gameObject.GetComponent<Enemy1>();
+        //take damage
+        if (Enemy.isDeath == false && !AttackDone)
+        {
 
-            //take damage
-            if (Enemy.isDeath == false)
+
+            GameObject hObject = Instantiate(hiteffect, new Vector3(TargetEnemy.transform.position.x, (player.transform.position.y + 1), TargetEnemy.transform.position.z), Quaternion.Euler(new Vector3(90, Random.Range(0, 360), 0))) as GameObject;
+            Destroy(hObject, 1);
+
+            damagetaken = Random.Range(LAttack, UAttack);
+
+            //crit test
+            CritRoll = Random.Range(1, 100);
+            if (CritRoll <= PlayerS.CritRate)
             {
-                HitSound.Play();
+                damagetaken = damagetaken * 2;
+                isCrit = true;
+            }
+            //
 
-                GameObject hObject = Instantiate(hiteffect, new Vector3(other.gameObject.transform.position.x, (player.transform.position.y + 1), other.gameObject.transform.position.z), Quaternion.Euler(new Vector3(90, Random.Range(0, 360), 0))) as GameObject;
-                Destroy(hObject, 1);
+            if (tpc.isThirdHit == true)
+                damagetaken = damagetaken * 2;
 
+            if (tpc.isSkillHit == true)
+            {
+                damagetaken = damagetaken * 3;
+                Debug.Log("Skill Hit!");
+                Enemy.Debuffed = true;
+                Enemy.eDefense -= 35;
 
-                damagetaken = Random.Range(LAttack, UAttack);
+                DebuffSound.Play();
 
+                var wo = Instantiate(FloatingTextPrefabDefDown, new Vector3((TargetEnemy.transform.position.x), (player.transform.position.y + 1), TargetEnemy.transform.position.z), Quaternion.identity);
+            }
+
+            if (!tpc.isSkillHit)
+            {
                 enemyDef = Enemy.eDefense;
                 DefPercent = 1 - (enemyDef / 100);
-
                 damagetaken = damagetaken * DefPercent;
-
-                if (tpc.isThirdHit == true)
-                    damagetaken = damagetaken * 3;
-
-                Enemy.eHealth = Enemy.eHealth - damagetaken;
-
-                if (Enemy.isAttacking == false)
-                {
-                    Enemy.enemyanim.SetTrigger("Damaged");
-                    Enemy.isDamage = true;
-                }
-
-
-                //damage end
-
-                //floating text
-                var go = Instantiate(FloatingTextPrefab, new Vector3((other.gameObject.transform.position.x), (player.transform.position.y - 1), other.gameObject.transform.position.z), Quaternion.identity);
-                //go.transform.position = go.transform.position + (other.gameObject.transform.forward);
-                go.GetComponent<TextMeshPro>().text = damagetaken.ToString("F0");
-
-                combonum.combonumber = combonum.combonumber + 1;
-                combonum.combotime = 0;
-                combonum.comboAnim.SetTrigger("ComboNumTrigger");
-
-                combonum.totaldamage = combonum.totaldamage + damagetaken;
             }
+
+            Enemy.eHealth = Enemy.eHealth - damagetaken;
+
+            if (Enemy.isAttacking == false)
+            {
+                Enemy.enemyanim.SetTrigger("Damaged");
+                Enemy.isDamage = true;
+            }
+
+            if (isCrit)
+                CritSound.Play();
+
+            if (!isCrit)
+                HitSound.Play();
+            //damage end
+
+            //floating text
+            if (isCrit == false)
+            {
+                var go = Instantiate(FloatingTextPrefab, new Vector3((TargetEnemy.transform.position.x), (player.transform.position.y + 2), TargetEnemy.transform.position.z), Quaternion.identity);
+                go.GetComponent<TextMeshPro>().text = damagetaken.ToString("F0");
+            }
+
+            if (isCrit == true)
+            {
+                var go = Instantiate(FloatingTextPrefabCrit, new Vector3((TargetEnemy.transform.position.x), (player.transform.position.y + 2), TargetEnemy.transform.position.z), Quaternion.identity);
+                go.GetComponent<TextMeshPro>().text = damagetaken.ToString("F0") + "<size=%25>critical!</size>";
+                isCrit = false;
+            }
+
+
+            combonum.combonumber = combonum.combonumber + 1;
+            combonum.combotime = 0;
+            combonum.comboAnim.SetTrigger("ComboNumTrigger");
+
+            combonum.totaldamage = combonum.totaldamage + damagetaken;
+
+            if (!tpc.isSkillHit)
+            AttackDone = true;
         }
     }
 }

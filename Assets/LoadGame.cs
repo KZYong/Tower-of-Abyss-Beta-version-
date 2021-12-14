@@ -15,12 +15,18 @@ public class LoadGame : MonoBehaviour
 
     public PlayerInput MenuAction;
 
+    public GameObject Buttons;
+    public GameObject AnyKey;
+
+    private Animator ButtonsAnim;
+
     private void Awake()
     {
       //  MenuAction.MainMenu.Enable();
 
         MenuAction = GetComponent<PlayerInput>();
-      //  MenuAction = new MainMenuAction();
+        //  MenuAction = new MainMenuAction();
+        ButtonsAnim = Buttons.GetComponent<Animator>();
     }
 
     // Start is called before the first frame update
@@ -48,7 +54,11 @@ public class LoadGame : MonoBehaviour
         if (MenuAction.actions["PressAnyKey"].ReadValue<float>() >= 1f)
         {
             Debug.Log("any key pressed!");
-            LoadGameScene();
+            //LoadGameScene();
+            AnyKey.SetActive(false);
+            Buttons.SetActive(true);
+            ButtonsAnim.Play("Fade");
+            
         }
     }
 

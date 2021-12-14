@@ -9,6 +9,8 @@ public class CountEnemy : MonoBehaviour
     public AudioSource BattleBGMSource;
     public AudioSource ExploreBGMSource;
 
+    public float OriginalVolume;
+
     public bool BattlePlaying;
     public bool ExplorePlaying;
 
@@ -16,10 +18,12 @@ public class CountEnemy : MonoBehaviour
 
     public bool BattleMode;
 
+    public bool ReduceVolume;
+
     // Start is called before the first frame update
     void Start()
     {
-
+        OriginalVolume = BattleBGMSource.volume;
     }
 
     // Update is called once per frame
@@ -39,7 +43,10 @@ public class CountEnemy : MonoBehaviour
                 {
                     ExploreBGMSource.Pause();
 
+                    BattleBGMSource.volume = OriginalVolume;
                     BattleBGMSource.Play();
+
+                    ReduceVolume = false;
 
                     BattlePlaying = true;
                     WaitTimer = 0;
@@ -56,7 +63,12 @@ public class CountEnemy : MonoBehaviour
             if (BattlePlaying == true)
             {
                 WaitTimer += Time.deltaTime;
-                
+
+                if (!ReduceVolume)
+                {
+                    BattleBGMSource.volume = BattleBGMSource.volume / 1.5f;
+                    ReduceVolume = true;
+                }
 
                 if (WaitTimer > 3)
                 {

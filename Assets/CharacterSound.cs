@@ -10,6 +10,7 @@ public class CharacterSound : MonoBehaviour
     public AudioSource DamageVoice1;
     public AudioSource SwingSound1;
     public AudioSource SwingSound2;
+    public AudioSource SkillSound1;
 
     // Start is called before the first frame update
     void Start()
@@ -59,5 +60,10 @@ public class CharacterSound : MonoBehaviour
     public void Swing2()
     {
         SwingSound2.Play();
+    }
+
+    public void Skill1()
+    {
+        SkillSound1.Play();
     }
 }

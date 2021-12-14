@@ -15,6 +15,7 @@ public class Enemy1 : MonoBehaviour
     public float health;
 
     public GameObject EnemyModel;
+    public GameObject PlayerModel;
     public Animator enemyanim;
 
 
@@ -46,6 +47,7 @@ public class Enemy1 : MonoBehaviour
     public float eHealth = 100;
     public float eMaxHealth = 100;
     public float eDefense = 40;
+    public float OeDefense = 40;
 
     public float eLA = 5f;
     public float eUA = 15f;
@@ -70,7 +72,11 @@ public class Enemy1 : MonoBehaviour
     public float debugtimer;
 
     private float parrytimer;
-    private bool parrytimesound;
+    public bool parrytimesound;
+
+    public GameObject DebuffUI;
+    public bool Debuffed;
+    public float DebuffTimer;
 
     // Start is called before the first frame update
     void Start()
@@ -94,6 +100,25 @@ public class Enemy1 : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (Debuffed)
+        {
+            DebuffUI.SetActive(true);
+            DebuffTimer += Time.deltaTime;
+        }
+
+        if (!Debuffed)
+        {
+            DebuffUI.SetActive(false);
+            
+            DebuffTimer = 0;
+        }
+
+        if (DebuffTimer > 10) 
+        {
+            Debuffed = false;
+            eDefense = OeDefense;
+        }
+
         if (!parrytimesound)
             parrytimer = 0;
         if (parrytimesound)
@@ -120,7 +145,7 @@ public class Enemy1 : MonoBehaviour
 
         ECanAttack = EH.EnemyCanAttack;
 
-        if (isDamage == true)
+        if (isDamage == true && isAttacking == false)
         {
             agent.updateRotation = true;
 
@@ -130,7 +155,7 @@ public class Enemy1 : MonoBehaviour
             transform.rotation = Quaternion.Slerp(transform.rotation, rotationAngle, Time.deltaTime * 5);
 
             damagetimer += Time.deltaTime;
-            if (damagetimer >= 0.25)
+            if (damagetimer >= 0.10)
             {
                 isDamage = false;
                 damagetimer = 0;
@@ -200,6 +225,8 @@ public class Enemy1 : MonoBehaviour
 
                 if (!parrytimesound)
                 ParrySound.Play();
+
+                parrytimesound = true;
 
                 EH.EnemyCanAttack = false;
             }
@@ -274,6 +301,7 @@ public class Enemy1 : MonoBehaviour
         if (alreadyAttacked)
         {
             GetComponent<NavMeshAgent>().speed = 3;
+            isAttacking = false;
         }
 
         if (!alreadyAttacked)
@@ -282,7 +310,7 @@ public class Enemy1 : MonoBehaviour
 
             //transform.LookAt(player);
 
-
+            isAttacking = true;
 
             enemyanim.Play("Attack");
             //agent.SetDestination(player.position);

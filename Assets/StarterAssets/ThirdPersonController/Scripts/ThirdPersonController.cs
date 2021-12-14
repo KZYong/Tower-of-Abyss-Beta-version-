@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 #if ENABLE_INPUT_SYSTEM && STARTER_ASSETS_PACKAGES_CHECKED
 using UnityEngine.InputSystem;
+using TMPro;
 #endif
 
 /* Note: animations are called via the controller for both the character and capsule using animator null checks
@@ -104,6 +105,7 @@ namespace StarterAssets
         public bool isDamage;
         public bool isThirdHit;
         public bool isSkill;
+        public bool isSkillHit;
 
         public bool CursorLocked;
 
@@ -122,6 +124,12 @@ namespace StarterAssets
         public GameObject player;
         public GameObject closeEnemy;
 
+        public bool Skilled;
+        public GameObject Skill_Ready;
+        public GameObject Skill_CD;
+        public TextMeshProUGUI Skill_CDText;
+        public float SkillCDTimer;
+
         public float targetSpeed;
 
         PlayerStats PlayerS;
@@ -132,6 +140,16 @@ namespace StarterAssets
 
         private CountEnemy ECounter;
 
+        public GameObject MenuPanel;
+        public GameObject MenuList;
+        private Animator MenuPanelAnim;
+        private Animator MenuListAnim;
+        public bool MenuOpened;
+        public bool MenuDone;
+
+        public AudioSource BGM1;
+        public AudioSource BGM2;
+
         private void Awake()
         {
             // get a reference to our main camera
@@ -139,6 +157,9 @@ namespace StarterAssets
             {
                 _mainCamera = GameObject.FindGameObjectWithTag("MainCamera");
             }
+
+            MenuPanelAnim = MenuPanel.GetComponent<Animator>();
+            MenuListAnim = MenuList.GetComponent<Animator>();
         }
 
         private void Start()
@@ -163,6 +184,30 @@ namespace StarterAssets
 
         private void Update()
         {
+            if (Skilled)
+            {
+                Skill_Ready.SetActive(false);
+                Skill_CD.SetActive(true);
+                Skill_CDText.text = SkillCDTimer.ToString("F0");
+                SkillCDTimer -= Time.deltaTime;
+                if (SkillCDTimer <= 0)
+                {
+                    Skilled = false;
+                }
+            }
+
+            if (!Skilled)
+            {
+                Skill_Ready.SetActive(true);
+                Skill_CD.SetActive(false);
+                SkillCDTimer = 20;
+            }
+
+
+
+            if (!LockAction)
+                Cursor.lockState = CursorLockMode.Locked;
+
             if (PlayerS.Health <= 0 && DeathAnim == false)
             {
                 PlayerDeath = true;
@@ -200,6 +245,43 @@ namespace StarterAssets
                     LockAction = false;
                 }
 
+            if (_playerInput.actions["Menu"].ReadValue<float>() == 1f && MenuOpened == false)
+                if (CursorTimer > 1)
+                {
+                    Cursor.lockState = CursorLockMode.None;
+                    CursorLocked = false;
+                    CursorTimer = 0;
+                    LockCameraPosition = true;
+                    LockAction = true;
+                    MenuPanel.SetActive(true);
+                    MenuList.SetActive(true);
+                    MenuPanelAnim.Play("MenuPanelAnim");
+                    MenuListAnim.Play("MenuAnim");
+
+                    BGM1.volume = BGM1.volume / 3;
+                    BGM2.volume = BGM2.volume / 3;
+
+                    MenuOpened = true;
+                }
+
+            if (MenuOpened)
+            {
+                if (CursorTimer > 0.3)
+                {
+                    MenuDone = true;
+                    
+                    Time.timeScale = 0;
+                   
+                }
+            }
+
+            if (_playerInput.actions["Menu"].ReadValue<float>() == 1f && MenuDone == true)
+                {
+                    ResumeGame();
+                    MenuOpened = false;
+                }
+
+
             _hasAnimator = TryGetComponent(out _animator);
 
             closeEnemy = NearestEnemy.closestEnemy;
@@ -212,12 +294,12 @@ namespace StarterAssets
                 JumpAndGravity();
             }
 
-            if (PlayerS.Stamina <= 15f)
+            if (PlayerS.Stamina <= 0f)
             {
                 GuardLock = true;
             }
 
-            if (PlayerS.Stamina >= 40f)
+            if (PlayerS.Stamina >= 15f)
             {
                 GuardLock = false;
             }
@@ -246,18 +328,19 @@ namespace StarterAssets
             }
 
 
-            if (_playerInput.actions["Skill1"].ReadValue<float>() == 1f && isHit == false && !LockAction)
+            if (_playerInput.actions["Skill1"].ReadValue<float>() == 1f && isHit == false && !LockAction && !Skilled)
             {
                 if (Grounded == true)
                 {
                     isAttack = true;
                     _animator.Play("Attack3");
+                    Skilled = true;
                 }
             }
 
-            if (_playerInput.actions["Parry"].ReadValue<float>() >= 1f && isHit == false && GuardLock == false && !LockAction)
+            if (_playerInput.actions["Parry"].ReadValue<float>() >= 1f && isHit == false && GuardLock == false && !LockAction && !isSkill)
             {
-                if (Grounded == true && PlayerS.Stamina >= 15f)
+                if (Grounded == true && PlayerS.Stamina >= 0f)
                 {
                     combo = 0;
 
@@ -282,7 +365,7 @@ namespace StarterAssets
             if (_playerInput.actions["Sprint"].ReadValue<float>() >= 1f)
             {
                 if (isHit == false && isGuard == false && isAttack == false && !LockAction)
-                    PlayerS.Stamina = PlayerS.Stamina - 0.15f;
+                    PlayerS.Stamina = PlayerS.Stamina - 0.20f;
             }
 
             if (isHitAnim == true)
@@ -373,6 +456,16 @@ namespace StarterAssets
             isSkill = false;
         }
 
+        private void StartSkillHit()
+        {
+            isSkillHit = true;
+        }
+
+        private void StopSkillHit()
+        {
+            isSkillHit = false;
+        }
+
         private void Slash1()
         {
             GameObject seObject = Instantiate(slashE1, new Vector3(transform.position.x, (transform.position.y + 1), transform.position.z), Quaternion.Euler(0, player.transform.eulerAngles.y, -153)) as GameObject;
@@ -397,6 +490,26 @@ namespace StarterAssets
             Destroy(seObject, 1);
             GameObject se2Object = Instantiate(slashE5, new Vector3(transform.position.x, (transform.position.y), transform.position.z), Quaternion.identity) as GameObject;
             Destroy(se2Object, 1);
+        }
+
+        private void ResumeGame()
+        {
+                Cursor.lockState = CursorLockMode.Locked;
+                CursorLocked = true;
+                CursorTimer = 0;
+                LockCameraPosition = false;
+                LockAction = false;
+                MenuPanel.SetActive(false);
+                MenuList.SetActive(false);
+                MenuOpened = false;
+                   MenuDone = false;
+            //  MenuPanelAnim.Play("MenuPanelAnim");
+            //  MenuListAnim.Play("MenuAnim");
+
+            BGM1.volume = BGM1.volume * 3;
+            BGM2.volume = BGM2.volume * 3;
+
+            Time.timeScale = 1;
         }
 
         private void LateUpdate()

@@ -68,6 +68,14 @@
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": ""
+                },
+                {
+                    "name": "Menu",
+                    "type": "Value",
+                    "id": "22a0b91d-d724-4fb7-a4ce-f7ad26565965",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "SlowTap"
                 }
             ],
             "bindings": [
@@ -261,7 +269,7 @@
                 {
                     "name": "",
                     "id": "970ffcee-d57c-4195-95eb-d1a6767aa620",
-                    "path": "<Gamepad>/buttonEast",
+                    "path": "<Gamepad>/buttonWest",
                     "interactions": "",
                     "processors": "",
                     "groups": "Gamepad",
@@ -294,7 +302,7 @@
                 {
                     "name": "",
                     "id": "e86d0847-8985-4a5c-8af8-576969e540aa",
-                    "path": "<Keyboard>/e",
+                    "path": "<Keyboard>/q",
                     "interactions": "",
                     "processors": "",
                     "groups": "KeyboardMouse",
@@ -305,7 +313,7 @@
                 {
                     "name": "",
                     "id": "ee4c503d-502b-4893-84af-9b7fb15c0e5b",
-                    "path": "<Gamepad>/buttonNorth",
+                    "path": "<Gamepad>/leftTrigger",
                     "interactions": "",
                     "processors": "",
                     "groups": "Gamepad",
@@ -321,6 +329,28 @@
                     "processors": "",
                     "groups": "KeyboardMouse",
                     "action": "CursorLock",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "d1b08cc8-2a51-4270-8235-30ef7124d279",
+                    "path": "<Keyboard>/escape",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "KeyboardMouse",
+                    "action": "Menu",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "afbd3f76-353b-44da-b845-d996eadbf1f0",
+                    "path": "<Gamepad>/start",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Gamepad",
+                    "action": "Menu",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
