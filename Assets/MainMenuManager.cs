@@ -9,6 +9,7 @@ public class MainMenuManager : MonoBehaviour
     public static MainMenuManager instance;
     public GameObject loadingScreen;
     public Animator loadingScreenAnimator;
+    public GameObject PersistentCamera;
 
     public float totalSceneProgress;
 
@@ -29,10 +30,24 @@ public class MainMenuManager : MonoBehaviour
 
     public void LoadGame()
     {
+        PersistentCamera.SetActive(true);
         loadingScreen.SetActive(true);
 
         scenesLoading.Add(SceneManager.UnloadSceneAsync((int)SceneIndexes.TITLE_SCREEN));
-        scenesLoading.Add(SceneManager.LoadSceneAsync((int)SceneIndexes.SANDBOX, LoadSceneMode.Single));
+        scenesLoading.Add(SceneManager.LoadSceneAsync((int)SceneIndexes.SANDBOX, LoadSceneMode.Additive));
+
+        StartCoroutine(GetSceneLoadProgress());
+    }
+
+    public void BackToMainMenu()
+    {
+        PersistentCamera.SetActive(true);
+        loadingScreen.SetActive(true);
+
+        Time.timeScale = 1f;
+
+        scenesLoading.Add(SceneManager.UnloadSceneAsync((int)SceneIndexes.SANDBOX));
+        scenesLoading.Add(SceneManager.LoadSceneAsync((int)SceneIndexes.TITLE_SCREEN, LoadSceneMode.Additive));
 
         StartCoroutine(GetSceneLoadProgress());
     }
@@ -58,6 +73,7 @@ public class MainMenuManager : MonoBehaviour
             }
         }
 
-        loadingScreen.gameObject.SetActive(false);
+        loadingScreen.SetActive(false);
+        PersistentCamera.SetActive(false);
     }
 }

@@ -76,6 +76,14 @@
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "SlowTap"
+                },
+                {
+                    "name": "Interact",
+                    "type": "Button",
+                    "id": "d1f3fc75-0242-4bcf-853e-c6e062ae44c8",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "SlowTap"
                 }
             ],
             "bindings": [
@@ -351,6 +359,28 @@
                     "processors": "",
                     "groups": "Gamepad",
                     "action": "Menu",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "6886ab88-a421-400b-bda8-48783aa8a4e3",
+                    "path": "<Keyboard>/e",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "KeyboardMouse",
+                    "action": "Interact",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "a016c173-cbe3-4739-acaa-947ac462a97a",
+                    "path": "<Gamepad>/buttonEast",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Gamepad",
+                    "action": "Interact",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

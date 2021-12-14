@@ -146,9 +146,16 @@ namespace StarterAssets
         private Animator MenuListAnim;
         public bool MenuOpened;
         public bool MenuDone;
+        public GameObject ConfirmPanel;
+        public GameObject ConfirmPanel2;
 
         public AudioSource BGM1;
         public AudioSource BGM2;
+
+        public bool canChest;
+        public GameObject InteractUI;
+        public GameObject TheChest;
+        ActivateChest Chest;
 
         private void Awake()
         {
@@ -246,7 +253,7 @@ namespace StarterAssets
                 }
 
             if (_playerInput.actions["Menu"].ReadValue<float>() == 1f && MenuOpened == false)
-                if (CursorTimer > 1)
+                if (CursorTimer > 0.5)
                 {
                     Cursor.lockState = CursorLockMode.None;
                     CursorLocked = false;
@@ -302,6 +309,20 @@ namespace StarterAssets
             if (PlayerS.Stamina >= 15f)
             {
                 GuardLock = false;
+            }
+
+            if (canChest == true)
+                InteractUI.SetActive(true);
+            if (canChest == false)
+                InteractUI.SetActive(false);
+
+            if (_playerInput.actions["Interact"].ReadValue<float>() == 1f && !isAttack && isHit == false && !isSkill && !LockAction)
+            {
+                if (canChest == true)
+                {
+                    Chest = TheChest.GetComponent<ActivateChest>();
+                    Chest._open = true;
+                }
             }
 
             if (_playerInput.actions["Attack"].ReadValue<float>() == 1f && !isAttack && isHit == false && !isSkill && !LockAction)
@@ -492,7 +513,7 @@ namespace StarterAssets
             Destroy(se2Object, 1);
         }
 
-        private void ResumeGame()
+        public void ResumeGame()
         {
                 Cursor.lockState = CursorLockMode.Locked;
                 CursorLocked = true;
@@ -508,6 +529,9 @@ namespace StarterAssets
 
             BGM1.volume = BGM1.volume * 3;
             BGM2.volume = BGM2.volume * 3;
+
+            ConfirmPanel.SetActive(false);
+            ConfirmPanel2.SetActive(false);
 
             Time.timeScale = 1;
         }

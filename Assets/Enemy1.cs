@@ -78,6 +78,9 @@ public class Enemy1 : MonoBehaviour
     public bool Debuffed;
     public float DebuffTimer;
 
+    public GameObject EnemyExplode;
+    private float deadtimer; 
+
     // Start is called before the first frame update
     void Start()
     {
@@ -167,12 +170,20 @@ public class Enemy1 : MonoBehaviour
             enemyanim.Play("Death");
             isDeath = true;
 
+            deadtimer += Time.deltaTime;
+
             if (PlayerDetected)
             {
                 EnemyCounter.EnemyCount -= 1;
                 PlayerDetected = false;
             }
             Destroy(this.gameObject, 3);
+
+            if (deadtimer > 2)
+            {
+                GameObject hObject = Instantiate(EnemyExplode, new Vector3(transform.position.x, (player.transform.position.y), transform.position.z), Quaternion.Euler(new Vector3(90, Random.Range(0, 360), 0)));
+                Destroy(hObject, 1);
+            }
         }
 
         isAttacking = EM.isAttack;

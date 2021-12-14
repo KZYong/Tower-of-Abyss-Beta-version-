@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public class PlayerStats : MonoBehaviour
 {
@@ -12,6 +13,12 @@ public class PlayerStats : MonoBehaviour
 
     public float Defense = 5f;
     public float CritRate = 5f;
+
+    public float EXP;
+    public float MaxEXP;
+    public int level;
+
+    public TextMeshProUGUI LevelText;
 
     public float LowerAttackDamage = 1f;
     public float UpperAttackDamage = 5f;
@@ -70,5 +77,23 @@ public class PlayerStats : MonoBehaviour
             StaminaWarning.SetActive(true);
             StaminaAnim.Play("StaminaWarningAnim");
         }
+
+        MaxEXP = 25 * level;
+
+        if (EXP >= MaxEXP)
+        {
+            level++;
+            EXP = 0;
+
+            MaxHealth = MaxHealth + Random.Range(40, 50);
+            Health = MaxHealth;
+
+            LowerAttackDamage += 4;
+            UpperAttackDamage += 5;
+            Defense += 1;
+            CritRate += 1;
+        }
+
+        LevelText.text = "LV." + level.ToString();
     }
 }

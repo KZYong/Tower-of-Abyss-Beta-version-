@@ -32,11 +32,16 @@ public class LoadGame : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        Time.timeScale = 1f;
+
+        blackscreenanimator.Play("FadeIn");
     }
 
     // Update is called once per frame
     void Update()
     {
+        Time.timeScale = 1f;
+
         blacktimer += Time.deltaTime;
 
         if (!blackStart)
