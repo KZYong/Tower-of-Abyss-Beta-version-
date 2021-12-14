@@ -16,6 +16,8 @@ public class ActivateChest : MonoBehaviour
 
 	public bool doneOpen;
 
+	public bool ChestUnlock;
+
 	private StarterAssets.ThirdPersonController tpc;
 	PlayerStats PlayerS;
 
@@ -38,6 +40,15 @@ public class ActivateChest : MonoBehaviour
 
 	public float Roll;
 
+	private Enemy1 Enemy;
+	private Enemy1 Enemy2;
+	private Enemy1 Enemy3;
+	public GameObject FirstEnemy;
+	public GameObject SecondEnemy;
+	public GameObject ThirdEnemy;
+
+	public GameObject ChestLockEffect;
+
 
 	private void Start()
     {
@@ -47,10 +58,24 @@ public class ActivateChest : MonoBehaviour
 		EXPAnim = EXPPlus.GetComponent<Animator>();
 		RewardAnim = RewardTextObject.GetComponent<Animator>();
 		ItemAnim = ItemTextObject.GetComponent<Animator>();
+
+		Enemy = FirstEnemy.GetComponent<Enemy1>();
+		Enemy2 = SecondEnemy.GetComponent<Enemy1>();
+		Enemy3 = ThirdEnemy.GetComponent<Enemy1>();
 	}
 
     void Update()
 	{
+		if (!ChestUnlock)
+			ChestLockEffect.SetActive(true);
+		if (ChestUnlock)
+			ChestLockEffect.SetActive(false);
+
+		if (Enemy.isDeath == true)
+        {
+			ChestUnlock = true;
+        }
+
 		if (Rewarding)
         {
 			RewardTimer += Time.deltaTime;
@@ -129,9 +154,18 @@ public class ActivateChest : MonoBehaviour
 	{
 		if (other.gameObject.tag == "Player")
         {
-			canOpen = true;
-			tpc.TheChest = this.gameObject;
-			tpc.canChest = true;
+			if (ChestUnlock && !doneOpen)
+			{
+				canOpen = true;
+				tpc.TheChest = this.gameObject;
+				tpc.canChest = true;
+			}
+
+			if (doneOpen)
+            {
+				canOpen = false;
+				tpc.canChest = false;
+            }
         }
 	}
 

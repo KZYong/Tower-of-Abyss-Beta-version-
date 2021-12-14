@@ -208,7 +208,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 2121088536}
         m_TargetAssemblyTypeName: LoadGame, Assembly-CSharp
-        m_MethodName: LoadGameScene
+        m_MethodName: QuitGame
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -217,7 +217,7 @@ MonoBehaviour:
           m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 0
-        m_CallState: 0
+        m_CallState: 2
 --- !u!114 &193208861
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1108,18 +1108,6 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 6814356934751812629, guid: 8096611fd896c534fb97a3c4dbea025b, type: 3}
   m_PrefabInstance: {fileID: 6814356935126860290}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &1007720992
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1007720991}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 74043173b535b4948b8ddc62d05eff7c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &1007720993
 MonoBehaviour:
   m_ObjectHideFlags: 0

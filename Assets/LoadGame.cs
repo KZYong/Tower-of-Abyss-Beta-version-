@@ -20,6 +20,8 @@ public class LoadGame : MonoBehaviour
 
     private Animator ButtonsAnim;
 
+    public float StartTimer;
+
     private void Awake()
     {
       //  MenuAction.MainMenu.Enable();
@@ -42,6 +44,7 @@ public class LoadGame : MonoBehaviour
     {
         Time.timeScale = 1f;
 
+        StartTimer += Time.deltaTime;
         blacktimer += Time.deltaTime;
 
         if (!blackStart)
@@ -58,11 +61,14 @@ public class LoadGame : MonoBehaviour
 
         if (MenuAction.actions["PressAnyKey"].ReadValue<float>() >= 1f)
         {
-            Debug.Log("any key pressed!");
-            //LoadGameScene();
-            AnyKey.SetActive(false);
-            Buttons.SetActive(true);
-            ButtonsAnim.Play("Fade");
+            if (StartTimer > 2)
+            {
+                Debug.Log("any key pressed!");
+                //LoadGameScene();
+                AnyKey.SetActive(false);
+                Buttons.SetActive(true);
+                ButtonsAnim.Play("Fade");
+            }
             
         }
     }
@@ -72,5 +78,10 @@ public class LoadGame : MonoBehaviour
         blackStart = true;
 
         blackscreenanimator.Play("FadeToBlack");
+    }
+
+    public void QuitGame()
+    {
+        Application.Quit();
     }
 }
