@@ -142,8 +142,10 @@ namespace StarterAssets
 
         public GameObject MenuPanel;
         public GameObject MenuList;
+        public GameObject StatList;
         private Animator MenuPanelAnim;
         private Animator MenuListAnim;
+        private Animator StatListAnim;
         public bool MenuOpened;
         public bool MenuDone;
         public GameObject ConfirmPanel;
@@ -167,6 +169,7 @@ namespace StarterAssets
 
             MenuPanelAnim = MenuPanel.GetComponent<Animator>();
             MenuListAnim = MenuList.GetComponent<Animator>();
+            StatListAnim = StatList.GetComponent<Animator>();
         }
 
         private void Start()
@@ -262,8 +265,10 @@ namespace StarterAssets
                     LockAction = true;
                     MenuPanel.SetActive(true);
                     MenuList.SetActive(true);
+                    StatList.SetActive(true);
                     MenuPanelAnim.Play("MenuPanelAnim");
                     MenuListAnim.Play("MenuAnim");
+                    StatListAnim.Play("UISlideDown");
 
                     BGM1.volume = BGM1.volume / 3;
                     BGM2.volume = BGM2.volume / 3;
@@ -465,6 +470,7 @@ namespace StarterAssets
         public void StopThirdHit()
         {
             isThirdHit = false;
+            isDamage = false;
         }
 
         private void StartSkill()
@@ -522,8 +528,9 @@ namespace StarterAssets
                 LockAction = false;
                 MenuPanel.SetActive(false);
                 MenuList.SetActive(false);
+                StatList.SetActive(false);
                 MenuOpened = false;
-                   MenuDone = false;
+                MenuDone = false;
             //  MenuPanelAnim.Play("MenuPanelAnim");
             //  MenuListAnim.Play("MenuAnim");
 

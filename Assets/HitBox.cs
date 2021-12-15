@@ -73,7 +73,10 @@ public class HitBox : MonoBehaviour
             AttackCD += Time.deltaTime;
         if (!AttackDone)
             AttackCD = 0;
-        if (AttackCD > 0.15) 
+        if (AttackCD > 0.25) 
+            AttackDone = false;
+
+        if (tpc.isDamage == true)
             AttackDone = false;
 
         combonumb = combonum.combonumber;
@@ -135,7 +138,7 @@ public class HitBox : MonoBehaviour
 
             if (tpc.isSkillHit == true)
             {
-                damagetaken = damagetaken * 3;
+                damagetaken = damagetaken * 2;
                 Debug.Log("Skill Hit!");
                 Enemy.Debuffed = true;
                 Enemy.eDefense -= 35;

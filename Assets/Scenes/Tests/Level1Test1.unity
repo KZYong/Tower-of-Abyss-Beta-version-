@@ -142,7 +142,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &493097
 RectTransform:
   m_ObjectHideFlags: 0
@@ -275,6 +275,7 @@ MonoBehaviour:
     m_Bits: 128
   health: 100
   EnemyModel: {fileID: 1496536970}
+  PlayerModel: {fileID: 0}
   enemyanim: {fileID: 0}
   walkPoint: {x: 0, y: 0, z: 0}
   walkPointRange: 2
@@ -293,6 +294,7 @@ MonoBehaviour:
   eHealth: 200
   eMaxHealth: 200
   eDefense: 40
+  OeDefense: 40
   eLA: 5
   eUA: 15
   eAttack: 10
@@ -304,6 +306,11 @@ MonoBehaviour:
   EM: {fileID: 0}
   EH: {fileID: 0}
   debugtimer: 0
+  parrytimesound: 0
+  DebuffUI: {fileID: 0}
+  Debuffed: 0
+  DebuffTimer: 0
+  EnemyExplode: {fileID: 0}
 --- !u!195 &89425266
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -456,10 +463,12 @@ MonoBehaviour:
   EnemyCount: 0
   BattleBGMSource: {fileID: 290079860}
   ExploreBGMSource: {fileID: 1528886192}
+  OriginalVolume: 0
   BattlePlaying: 0
   ExplorePlaying: 0
   WaitTimer: 0
   BattleMode: 0
+  ReduceVolume: 0
 --- !u!4 &105169004
 Transform:
   m_ObjectHideFlags: 0
