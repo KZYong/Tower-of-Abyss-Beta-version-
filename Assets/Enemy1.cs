@@ -79,7 +79,11 @@ public class Enemy1 : MonoBehaviour
     public float DebuffTimer;
 
     public GameObject EnemyExplode;
-    private float deadtimer; 
+    private float deadtimer;
+
+    public GameObject Indicator;
+    private Animator IndicatorAnim;
+    public AudioSource AlertSound;
 
     // Start is called before the first frame update
     void Start()
@@ -92,6 +96,8 @@ public class Enemy1 : MonoBehaviour
         EH = EnemyWeapon.GetComponent<EnemyHitBox1>();
 
         EnemyCounter = FindObjectOfType<CountEnemy>();
+
+        IndicatorAnim = Indicator.GetComponent<Animator>();
     }
 
     private void Awake()
@@ -103,6 +109,7 @@ public class Enemy1 : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+
         if (Debuffed)
         {
             DebuffUI.SetActive(true);
@@ -112,11 +119,11 @@ public class Enemy1 : MonoBehaviour
         if (!Debuffed)
         {
             DebuffUI.SetActive(false);
-            
+
             DebuffTimer = 0;
         }
 
-        if (DebuffTimer > 10) 
+        if (DebuffTimer > 10)
         {
             Debuffed = false;
             eDefense = OeDefense;
@@ -138,13 +145,13 @@ public class Enemy1 : MonoBehaviour
             sightRange = 5;
 
 
-       /// debugtimer += Time.deltaTime;
+        /// debugtimer += Time.deltaTime;
 
-      //  if (debugtimer >= 10)
-      //  {
-    //       isAttacking = false;
-     //       debugtimer = 0;
-    //    }
+        //  if (debugtimer >= 10)
+        //  {
+        //       isAttacking = false;
+        //       debugtimer = 0;
+        //    }
 
         ECanAttack = EH.EnemyCanAttack;
 
@@ -235,7 +242,7 @@ public class Enemy1 : MonoBehaviour
                 Destroy(pObject, 1);
 
                 if (!parrytimesound)
-                ParrySound.Play();
+                    ParrySound.Play();
 
                 parrytimesound = true;
 
@@ -285,15 +292,15 @@ public class Enemy1 : MonoBehaviour
     private void ChasePlayer()
     {
         if (!PlayerDetected)
-        EnemyCounter.EnemyCount += 1;
+            EnemyCounter.EnemyCount += 1;
 
         PlayerDetected = true;
-    
+
 
         if (!alreadyAttacked)
         {
-        GetComponent<NavMeshAgent>().speed = 6;
-        enemyanim.Play("Run");
+            GetComponent<NavMeshAgent>().speed = 6;
+            enemyanim.Play("Run");
         }
 
         if (alreadyAttacked)
@@ -322,6 +329,10 @@ public class Enemy1 : MonoBehaviour
             //transform.LookAt(player);
 
             isAttacking = true;
+
+            Indicator.SetActive(true);
+            IndicatorAnim.Play("Enemyindicator");
+            AlertSound.Play();
 
             enemyanim.Play("Attack");
             //agent.SetDestination(player.position);
@@ -371,4 +382,8 @@ public class Enemy1 : MonoBehaviour
         Gizmos.DrawWireSphere(transform.position, sightRange);
     }
 
+    public void Attacking()
+    {
+        isAttacking = true;
+    }
 }

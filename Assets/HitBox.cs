@@ -76,8 +76,8 @@ public class HitBox : MonoBehaviour
         if (AttackCD > 0.25) 
             AttackDone = false;
 
-        if (tpc.isDamage == true)
-            AttackDone = false;
+       // if (tpc.isDamage == true)
+           // AttackDone = false;
 
         combonumb = combonum.combonumber;
 
@@ -161,6 +161,8 @@ public class HitBox : MonoBehaviour
             {
                 Enemy.enemyanim.SetTrigger("Damaged");
                 Enemy.isDamage = true;
+
+                Enemy.Indicator.SetActive(false);
             }
 
             if (isCrit)

@@ -33,7 +33,7 @@ public class CountEnemy : MonoBehaviour
         {
             BattleMode = true;
 
-            Debug.Log("Battle Start!");
+            //Debug.Log("Battle Start!");
 
             if (BattlePlaying == false)
             {
@@ -58,7 +58,7 @@ public class CountEnemy : MonoBehaviour
         {
             BattleMode = false;
 
-            Debug.Log("Battle End!");
+            //Debug.Log("Battle End!");
 
             if (BattlePlaying == true)
             {

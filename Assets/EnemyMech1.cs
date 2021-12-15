@@ -30,6 +30,7 @@ public class EnemyMech1 : MonoBehaviour
     {
         isAttack = true;
         isAttackHit = false;
+        Enemy.isAttacking = true;
     }
 
     public void EndAttack()
@@ -57,5 +58,15 @@ public class EnemyMech1 : MonoBehaviour
     public void DebugAttack()
     {
         EH.EnemyCanAttack = false;
+    }
+
+    public void Attacking()
+    {
+        Enemy.isAttacking = true;
+    }
+
+    public void IndicatorOff()
+    {
+        Enemy.Indicator.SetActive(false);
     }
 }

@@ -42,15 +42,47 @@ public class PlayerStats : MonoBehaviour
     public TextMeshProUGUI M_Defense;
     public TextMeshProUGUI M_CritRate;
 
+    public float LastPositionX;
+    public float LastPositionY;
+    public float LastPositionZ;
+
+    public float deathtimer;
+
+    private StarterAssets.ThirdPersonController tpc;
+    private GameObject Player;
+
     // Start is called before the first frame update
     void Start()
     {
         StaminaAnim = StaminaWarning.GetComponent<Animator>();
+
+        tpc = GetComponent<StarterAssets.ThirdPersonController>();
+
+        Player = GameObject.FindWithTag("MainPlayer");
+
+        LastPositionX = SavedData.LoadedPositionX;
+        LastPositionY = SavedData.LoadedPositionY;
+        LastPositionZ = SavedData.LoadedPositionZ;
+
+        Player.transform.position = new Vector3(LastPositionX, LastPositionY, LastPositionZ);
     }
 
     // Update is called once per frame
     void Update()
     {
+        deathtimer += Time.deltaTime;
+
+        if (tpc.PlayerDeath)
+        {
+            if (deathtimer > 5)
+            {
+                MainMenuManager.instance.ResetLevel1();
+            }
+        }
+
+        if (!tpc.PlayerDeath)
+            deathtimer = 0;
+
         Timer += Time.deltaTime;
         Seconds += Time.deltaTime;
 

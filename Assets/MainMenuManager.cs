@@ -52,6 +52,19 @@ public class MainMenuManager : MonoBehaviour
         StartCoroutine(GetSceneLoadProgress());
     }
 
+    public void ResetLevel1()
+    {
+        PersistentCamera.SetActive(true);
+        loadingScreen.SetActive(true);
+
+        Time.timeScale = 1f;
+
+        scenesLoading.Add(SceneManager.UnloadSceneAsync((int)SceneIndexes.SANDBOX));
+        scenesLoading.Add(SceneManager.LoadSceneAsync((int)SceneIndexes.SANDBOX, LoadSceneMode.Additive));
+
+        StartCoroutine(GetSceneLoadProgress());
+    }
+
     public IEnumerator GetSceneLoadProgress()
     {
         for (int i=0; i<scenesLoading.Count;i++)

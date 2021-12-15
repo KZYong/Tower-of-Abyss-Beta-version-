@@ -34,7 +34,7 @@ public class EnemyHitBox1 : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.tag == "Player")
+        if (other.gameObject.tag == "Player" && !tpc.isSkill)
         {
             Debug.Log("Enemy Collided with Player");
 

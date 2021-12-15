@@ -49,11 +49,17 @@ public class ActivateChest : MonoBehaviour
 
 	public GameObject ChestLockEffect;
 
+	public AudioSource ChestSound;
+	public AudioSource RewardSound;
+
+	public GameObject Player;
+
 
 	private void Start()
     {
 		tpc = FindObjectOfType<StarterAssets.ThirdPersonController>();
 		PlayerS = FindObjectOfType<PlayerStats>();
+		Player = GameObject.FindWithTag("Player");
 
 		EXPAnim = EXPPlus.GetComponent<Animator>();
 		RewardAnim = RewardTextObject.GetComponent<Animator>();
@@ -80,7 +86,7 @@ public class ActivateChest : MonoBehaviour
         {
 			RewardTimer += Time.deltaTime;
 
-			if (RewardTimer > 5)
+			if (RewardTimer > 9)
             {
 				Rewarding = false;
 				EXPPlus.SetActive(false);
@@ -98,6 +104,10 @@ public class ActivateChest : MonoBehaviour
 
 			if (!doneOpen)
 			{
+			//	SavedData.LoadedPositionX = Player.transform.position.x;
+			//	SavedData.LoadedPositionY = Player.transform.position.y + 1;
+			//	SavedData.LoadedPositionZ = Player.transform.position.z;
+
 				Roll = Random.Range(1, 100);
 
 				if (Roll <= 30)
@@ -125,6 +135,9 @@ public class ActivateChest : MonoBehaviour
 
 				ItemTextObject.SetActive(true);
 				ItemAnim.Play("EXP_PLUS_ANIM");
+
+				ChestSound.Play();
+				RewardSound.Play();
 
 				doneOpen = true;
 				Rewarding = true;
