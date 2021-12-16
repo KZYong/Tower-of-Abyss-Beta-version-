@@ -100,6 +100,14 @@
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "SlowTap"
+                },
+                {
+                    "name": "DialogueNext",
+                    "type": "Button",
+                    "id": "3eecbcd8-10e9-47d9-8024-7bd16c5404ae",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "SlowTap"
                 }
             ],
             "bindings": [
@@ -441,6 +449,39 @@
                     "processors": "",
                     "groups": "Gamepad",
                     "action": "Use2",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "1e76ea8d-8f83-4025-9045-369042fba2e0",
+                    "path": "<Mouse>/leftButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "KeyboardMouse",
+                    "action": "DialogueNext",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "b85a5db6-6dae-4446-9e67-dd57e54bc7f0",
+                    "path": "<Keyboard>/enter",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "KeyboardMouse",
+                    "action": "DialogueNext",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "d54c7e45-b027-47c3-980f-585419090021",
+                    "path": "<Gamepad>/buttonEast",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Gamepad",
+                    "action": "DialogueNext",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

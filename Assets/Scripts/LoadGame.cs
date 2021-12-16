@@ -59,13 +59,21 @@ public class LoadGame : MonoBehaviour
             if (blacktimer > 1)
             {
                 blackStart = false;
+
+                if (!SavedData.Load)
                 MainMenuManager.instance.LoadGame();
+
+                if (SavedData.Load)
+                {
+                    if (SavedData.LoadStage == 1)
+                    MainMenuManager.instance.LoadGame();
+                }
             }
         }
 
         if (MenuAction.actions["PressAnyKey"].ReadValue<float>() >= 1f && !AnyKeyDone)
         {
-            if (StartTimer > 3)
+            if (StartTimer > 2.25)
             {
                 Debug.Log("any key pressed!");
                 //LoadGameScene();
@@ -84,6 +92,15 @@ public class LoadGame : MonoBehaviour
         blackStart = true;
 
         blackscreenanimator.Play("FadeToBlack");
+    }
+
+    public void ContinueGameScene()
+    {
+        blackStart = true;
+
+        blackscreenanimator.Play("FadeToBlack");
+
+        SavedData.Load = true;
     }
 
     public void QuitGame()

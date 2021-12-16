@@ -70,6 +70,14 @@ public class PlayerStats : MonoBehaviour
     public float LevelUpTime;
     public bool LevelUpDone;
 
+    public GameObject DeadScreen;
+    public GameObject DeadPanel;
+    private Animator DeadPanelAnim;
+    public GameObject DeadText;
+    public GameObject DeadGlow;
+    private Animator DeadGlowAnim;
+    private float DeadTimer;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -79,6 +87,8 @@ public class PlayerStats : MonoBehaviour
 
         LevelUpAnim = LevelUpEffect.GetComponent<Animator>();
         LevelUpTextAnim = LevelUpText.GetComponent<Animator>();
+        DeadGlowAnim = DeadGlow.GetComponent<Animator>();
+        DeadPanelAnim = DeadPanel.GetComponent<Animator>();
 
         Player = GameObject.FindWithTag("MainPlayer");
 
@@ -86,12 +96,41 @@ public class PlayerStats : MonoBehaviour
         LastPositionY = SavedData.LoadedPositionY;
         LastPositionZ = SavedData.LoadedPositionZ;
 
-        //Player.transform.position = new Vector3(LastPositionX, LastPositionY, LastPositionZ);
+        //LoadGame
+        if (SavedData.Load)
+        {
+            LoadStats();
+            SavedData.Load = false;
+        }
+
+        if (SavedData.PlayerDead)
+        {
+            LoadStats();
+            SavedData.PlayerDead = false;
+        }
+        
     }
 
     // Update is called once per frame
     void Update()
     {
+        if (Health <= 0)
+        {
+            DeadScreen.SetActive(true);
+            DeadPanel.SetActive(true);
+            DeadPanelAnim.Play("DeadPanelAnim");
+
+            DeadTimer += Time.deltaTime;
+
+            if (DeadTimer >= 2)
+            {
+                DeadText.SetActive(true);
+                DeadGlow.SetActive(true);
+                DeadGlowAnim.Play("LevelUpAnim");
+            }
+            
+        }
+
         if (LevelUpDone)
         {
             LevelUpTime += Time.deltaTime;
@@ -141,6 +180,7 @@ public class PlayerStats : MonoBehaviour
         {
             if (deathtimer > 5)
             {
+                SavedData.PlayerDead = true;
                 MainMenuManager.instance.ResetLevel1();
             }
         }
@@ -212,9 +252,9 @@ public class PlayerStats : MonoBehaviour
 
         if (EXP >= MaxEXP)
         {
+            EXP = EXP - MaxEXP;
             level++;
-            EXP = 0;
-
+            
             MaxHealth = MaxHealth + Random.Range(40, 50);
             Health = MaxHealth;
 
@@ -234,5 +274,23 @@ public class PlayerStats : MonoBehaviour
         }
 
         LevelText.text = "LV." + level.ToString();
+    }
+
+    public void LoadStats()
+    {
+        Player.transform.position = new Vector3(LastPositionX, LastPositionY, LastPositionZ);
+
+        Health = SavedData.LoadedHealth;
+        MaxHealth = SavedData.LoadedMaxHealth;
+        level = SavedData.LoadedLevel;
+        MaxEXP = SavedData.LoadedMaxEXP;
+        EXP = SavedData.LoadedEXP;
+        CritRate = SavedData.LoadedCritRate;
+        Defense = SavedData.LoadedDefense;
+        Seconds = SavedData.LoadedSeconds;
+        LowerAttackDamage = SavedData.LoadedAttackLow;
+        UpperAttackDamage = SavedData.LoadedAttackHigh;
+        LesserPotion = SavedData.LoadedHPPot1;
+        GreaterPotion = SavedData.LoadedHPPot2;
     }
 }

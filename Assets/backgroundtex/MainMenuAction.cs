@@ -183,6 +183,44 @@ public class @MainMenuAction : IInputActionCollection, IDisposable
                     ""isPartOfComposite"": false
                 }
             ]
+        },
+        {
+            ""name"": ""Game"",
+            ""id"": ""cfee1cc9-3133-428b-be29-c8324242a9ea"",
+            ""actions"": [
+                {
+                    ""name"": ""DialogueNext"",
+                    ""type"": ""Button"",
+                    ""id"": ""efc5b452-156e-4dff-8451-e1cac3054ebe"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
+                }
+            ],
+            ""bindings"": [
+                {
+                    ""name"": """",
+                    ""id"": ""2e386449-61da-4fb6-8859-797ee3159793"",
+                    ""path"": ""<Mouse>/leftButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""DialogueNext"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""c1ea14bb-6639-47c1-8baf-d1ec4946bae6"",
+                    ""path"": ""<Gamepad>/buttonEast"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""DialogueNext"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                }
+            ]
         }
     ],
     ""controlSchemes"": []
@@ -190,6 +228,9 @@ public class @MainMenuAction : IInputActionCollection, IDisposable
         // MainMenu
         m_MainMenu = asset.FindActionMap("MainMenu", throwIfNotFound: true);
         m_MainMenu_PressAnyKey = m_MainMenu.FindAction("PressAnyKey", throwIfNotFound: true);
+        // Game
+        m_Game = asset.FindActionMap("Game", throwIfNotFound: true);
+        m_Game_DialogueNext = m_Game.FindAction("DialogueNext", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -268,8 +309,45 @@ public class @MainMenuAction : IInputActionCollection, IDisposable
         }
     }
     public MainMenuActions @MainMenu => new MainMenuActions(this);
+
+    // Game
+    private readonly InputActionMap m_Game;
+    private IGameActions m_GameActionsCallbackInterface;
+    private readonly InputAction m_Game_DialogueNext;
+    public struct GameActions
+    {
+        private @MainMenuAction m_Wrapper;
+        public GameActions(@MainMenuAction wrapper) { m_Wrapper = wrapper; }
+        public InputAction @DialogueNext => m_Wrapper.m_Game_DialogueNext;
+        public InputActionMap Get() { return m_Wrapper.m_Game; }
+        public void Enable() { Get().Enable(); }
+        public void Disable() { Get().Disable(); }
+        public bool enabled => Get().enabled;
+        public static implicit operator InputActionMap(GameActions set) { return set.Get(); }
+        public void SetCallbacks(IGameActions instance)
+        {
+            if (m_Wrapper.m_GameActionsCallbackInterface != null)
+            {
+                @DialogueNext.started -= m_Wrapper.m_GameActionsCallbackInterface.OnDialogueNext;
+                @DialogueNext.performed -= m_Wrapper.m_GameActionsCallbackInterface.OnDialogueNext;
+                @DialogueNext.canceled -= m_Wrapper.m_GameActionsCallbackInterface.OnDialogueNext;
+            }
+            m_Wrapper.m_GameActionsCallbackInterface = instance;
+            if (instance != null)
+            {
+                @DialogueNext.started += instance.OnDialogueNext;
+                @DialogueNext.performed += instance.OnDialogueNext;
+                @DialogueNext.canceled += instance.OnDialogueNext;
+            }
+        }
+    }
+    public GameActions @Game => new GameActions(this);
     public interface IMainMenuActions
     {
         void OnPressAnyKey(InputAction.CallbackContext context);
+    }
+    public interface IGameActions
+    {
+        void OnDialogueNext(InputAction.CallbackContext context);
     }
 }

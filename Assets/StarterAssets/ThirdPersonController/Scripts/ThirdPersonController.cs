@@ -11,7 +11,7 @@ namespace StarterAssets
 {
     [RequireComponent(typeof(CharacterController))]
 #if ENABLE_INPUT_SYSTEM && STARTER_ASSETS_PACKAGES_CHECKED
-	[RequireComponent(typeof(PlayerInput))]
+    [RequireComponent(typeof(PlayerInput))]
 #endif
     public class ThirdPersonController : MonoBehaviour
     {
@@ -92,7 +92,7 @@ namespace StarterAssets
 
         private bool _hasAnimator;
 
-        private PlayerInput _playerInput;
+        public PlayerInput _playerInput;
 
         public GameObject effect1;
 
@@ -163,11 +163,24 @@ namespace StarterAssets
         public GameObject TheChest;
         ActivateChest Chest;
 
+        public bool canSave;
+        public GameObject TheSave;
+        SaveNPC Save;
+
         public float itemCD;
         public bool itemUsed;
 
         private float StartLockTime;
         private bool DoneStart;
+
+        public bool isDialogue;
+        public bool DialogueDone;
+
+        public GameObject GameUI;
+        public GameObject PlayerBar;
+
+        public GameObject SaveDialogue;
+        private Dialogue SavingDialogue;
 
         private void Awake()
         {
@@ -203,6 +216,8 @@ namespace StarterAssets
 
             LockAction = true;
             LockCameraPosition = true;
+
+            SavingDialogue = SaveDialogue.GetComponent<Dialogue>();
         }
 
         private void Update()
@@ -215,7 +230,7 @@ namespace StarterAssets
                 DoneStart = true;
             }
 
-                if (Skilled)
+            if (Skilled)
             {
                 Skill_Ready.SetActive(false);
                 Skill_CD.SetActive(true);
@@ -261,7 +276,7 @@ namespace StarterAssets
                     Cursor.lockState = CursorLockMode.None;
                     CursorLocked = false;
                     CursorTimer = 0;
-                    
+
                     LockCameraPosition = true;
                     LockAction = true;
                 }
@@ -276,7 +291,36 @@ namespace StarterAssets
                     LockAction = false;
                 }
 
-            if (_playerInput.actions["Menu"].ReadValue<float>() == 1f && MenuOpened == false)
+            if (isDialogue)
+            {
+                Cursor.lockState = CursorLockMode.None;
+                CursorLocked = false;
+                LockCameraPosition = true;
+                LockAction = true;
+                GameUI.SetActive(false);
+                PlayerBar.SetActive(false);
+                _animator.SetBool("Idle", true);
+            } 
+
+            if (!isDialogue)
+            {
+                _animator.SetBool("Idle", false);
+            }
+
+            if (DialogueDone)
+            {
+                Cursor.lockState = CursorLockMode.Locked;
+                CursorLocked = true;
+                DoneStart = false;
+                StartLockTime = 0;
+                GameUI.SetActive(true);
+                PlayerBar.SetActive(true);
+                _animator.SetBool("Idle", false);
+                _animator.SetTrigger("FinishIdle");
+                DialogueDone = false;
+            }
+
+            if (_playerInput.actions["Menu"].ReadValue<float>() == 1f && MenuOpened == false && !PlayerDeath)
                 if (CursorTimer > 0.5)
                 {
                     Cursor.lockState = CursorLockMode.None;
@@ -302,26 +346,26 @@ namespace StarterAssets
                 if (CursorTimer > 0.3)
                 {
                     MenuDone = true;
-                    
+
                     Time.timeScale = 0;
-                   
+
                 }
             }
 
             if (_playerInput.actions["Menu"].ReadValue<float>() == 1f && MenuDone == true)
-                {
-                    ResumeGame();
-                    MenuOpened = false;
-                }
+            {
+                ResumeGame();
+                MenuOpened = false;
+            }
 
 
             _hasAnimator = TryGetComponent(out _animator);
 
             closeEnemy = NearestEnemy.closestEnemy;
 
-            GroundedCheck();  
+            GroundedCheck();
 
-            if (isGuard == false && isHit == false && PlayerDeath == false)
+            if (isGuard == false && isHit == false && PlayerDeath == false && !isDialogue && DoneStart)
             {
                 Move();
                 JumpAndGravity();
@@ -341,6 +385,10 @@ namespace StarterAssets
                 InteractUI.SetActive(true);
             if (canChest == false)
                 InteractUI.SetActive(false);
+            if (canSave == true)
+                InteractUI.SetActive(true);
+            if (canSave == false)
+                InteractUI.SetActive(false);
 
             if (_playerInput.actions["Interact"].ReadValue<float>() == 1f && !isAttack && isHit == false && !isSkill && !LockAction)
             {
@@ -348,6 +396,16 @@ namespace StarterAssets
                 {
                     Chest = TheChest.GetComponent<ActivateChest>();
                     Chest._open = true;
+                }
+                if (canSave == true && Grounded)
+                {
+                    isDialogue = true;
+                    SaveDialogue.SetActive(true);
+                    SavingDialogue.StartDialogue();
+
+                    Save = TheSave.GetComponent<SaveNPC>();
+                    Save.Saving = true;
+                    Debug.Log("Game Saved!");
                 }
             }
 
@@ -387,7 +445,7 @@ namespace StarterAssets
             if (!itemUsed)
                 itemCD = 0;
 
-            if (_playerInput.actions["Use1"].ReadValue<float>() == 1f && isHit == false && !LockAction && !Skilled && !itemUsed)
+            if (_playerInput.actions["Use1"].ReadValue<float>() == 1f && isHit == false && !LockAction && !itemUsed && !isAttack)
             {
                 if (PlayerS.LesserPotion >= 1 && PlayerS.Health < PlayerS.MaxHealth)
                 {
@@ -407,7 +465,7 @@ namespace StarterAssets
                 }
             }
 
-            if (_playerInput.actions["Use2"].ReadValue<float>() == 1f && isHit == false && !LockAction && !Skilled && !itemUsed)
+            if (_playerInput.actions["Use2"].ReadValue<float>() == 1f && isHit == false && !LockAction && !itemUsed && !isAttack)
             {
                 if (PlayerS.GreaterPotion >= 1 && PlayerS.Health < PlayerS.MaxHealth)
                 {

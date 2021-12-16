@@ -768,7 +768,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 2121088536}
         m_TargetAssemblyTypeName: LoadGame, Assembly-CSharp
-        m_MethodName: LoadGameScene
+        m_MethodName: ContinueGameScene
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -777,7 +777,7 @@ MonoBehaviour:
           m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 0
-        m_CallState: 0
+        m_CallState: 2
       - m_Target: {fileID: 1637435413}
         m_TargetAssemblyTypeName: MenuSound, Assembly-CSharp
         m_MethodName: ButtonSFX

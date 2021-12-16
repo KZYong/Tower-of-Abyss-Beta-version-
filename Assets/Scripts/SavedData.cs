@@ -12,7 +12,7 @@ public class SavedData : MonoBehaviour
 
     public static float LoadedHealth;
     public static float LoadedMaxHealth;
-    public static float LoadedLevel;
+    public static int LoadedLevel;
     public static float LoadedEXP;
     public static float LoadedMaxEXP;
     public static float LoadedCritRate;
@@ -20,12 +20,17 @@ public class SavedData : MonoBehaviour
     public static float LoadedSeconds;
     public static float LoadedAttackLow;
     public static float LoadedAttackHigh;
+    public static int LoadedHPPot1;
+    public static int LoadedHPPot2;
 
     public static int LoadStage;
+
+    public static bool StartDialogue;
 
     public GameObject Player;
     public static bool NewGame;
     public static bool Load;
+    public static bool PlayerDead;
 
     public static bool Level1;
     public static bool Level2;
@@ -34,14 +39,13 @@ public class SavedData : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        NewGame = true;
-
         if (NewGame == true)
         {
             LoadedPositionX = 0;
             LoadedPositionY = 0.9299f;
             LoadedPositionZ = 0;
 
+            StartDialogue = false;
             NewGame = false;
         }
 
@@ -52,11 +56,5 @@ public class SavedData : MonoBehaviour
     void Update()
     {
         Debug.Log("Current Saved Position is " + LoadedPositionX + "," + LoadedPositionY + "," + LoadedPositionZ);
-    }
-
-    public void LoadPlayer()
-    {
-        //Load Player Position
-        Player.transform.position = new Vector3(LoadedPositionX, LoadedPositionY, LoadedPositionZ);
     }
 }
