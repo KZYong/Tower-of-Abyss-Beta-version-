@@ -151,13 +151,23 @@ namespace StarterAssets
         public GameObject ConfirmPanel;
         public GameObject ConfirmPanel2;
 
+        public GameObject FloatingTextHeal;
+        public GameObject HealingEffect;
+
         public AudioSource BGM1;
         public AudioSource BGM2;
+        public AudioSource HealingSound;
 
         public bool canChest;
         public GameObject InteractUI;
         public GameObject TheChest;
         ActivateChest Chest;
+
+        public float itemCD;
+        public bool itemUsed;
+
+        private float StartLockTime;
+        private bool DoneStart;
 
         private void Awake()
         {
@@ -190,11 +200,22 @@ namespace StarterAssets
             NearestEnemy = FindObjectOfType<ScanNearestEnemy>();
 
             CursorLocked = true;
+
+            LockAction = true;
+            LockCameraPosition = true;
         }
 
         private void Update()
         {
-            if (Skilled)
+            StartLockTime += Time.deltaTime;
+            if (StartLockTime >= 0.5 && !DoneStart)
+            {
+                LockAction = false;
+                LockCameraPosition = false;
+                DoneStart = true;
+            }
+
+                if (Skilled)
             {
                 Skill_Ready.SetActive(false);
                 Skill_CD.SetActive(true);
@@ -354,6 +375,58 @@ namespace StarterAssets
             }
 
 
+            if (itemUsed)
+            { 
+                itemCD += Time.deltaTime;
+                if (itemCD >= 1)
+                {
+                    itemUsed = false;
+                }
+            }
+
+            if (!itemUsed)
+                itemCD = 0;
+
+            if (_playerInput.actions["Use1"].ReadValue<float>() == 1f && isHit == false && !LockAction && !Skilled && !itemUsed)
+            {
+                if (PlayerS.LesserPotion >= 1 && PlayerS.Health < PlayerS.MaxHealth)
+                {
+                    float HealAmount;
+                    HealAmount = PlayerS.MaxHealth * 0.2f;
+                    PlayerS.LesserPotion -= 1;
+                    PlayerS.Health += HealAmount;
+                    itemUsed = true;
+
+                    HealingSound.Play();
+
+                    var ho = Instantiate(FloatingTextHeal, new Vector3((transform.position.x), (transform.position.y + 1), transform.position.z), Quaternion.identity);
+                    ho.GetComponent<TextMeshPro>().text = "+" + HealAmount.ToString("F0");
+
+                    GameObject healObject = Instantiate(HealingEffect, new Vector3(transform.position.x, (transform.position.y + 1), transform.position.z), Quaternion.Euler(new Vector3(90, Random.Range(0, 360), 0))) as GameObject;
+                    Destroy(healObject, 1);
+                }
+            }
+
+            if (_playerInput.actions["Use2"].ReadValue<float>() == 1f && isHit == false && !LockAction && !Skilled && !itemUsed)
+            {
+                if (PlayerS.GreaterPotion >= 1 && PlayerS.Health < PlayerS.MaxHealth)
+                {
+                    float HealAmount;
+                    HealAmount = PlayerS.MaxHealth * 0.35f;
+                    PlayerS.GreaterPotion -= 1;
+                    PlayerS.Health += HealAmount;
+                    itemUsed = true;
+
+                    HealingSound.Play();
+
+                    var ho = Instantiate(FloatingTextHeal, new Vector3((transform.position.x), (transform.position.y + 1), transform.position.z), Quaternion.identity);
+                    ho.GetComponent<TextMeshPro>().text = "+" + HealAmount.ToString("F0");
+
+                    GameObject healObject = Instantiate(HealingEffect, new Vector3(transform.position.x, (transform.position.y + 1), transform.position.z), Quaternion.Euler(new Vector3(90, Random.Range(0, 360), 0))) as GameObject;
+                    Destroy(healObject, 1);
+                }
+            }
+
             if (_playerInput.actions["Skill1"].ReadValue<float>() == 1f && isHit == false && !LockAction && !Skilled)
             {
                 if (Grounded == true)
@@ -380,7 +453,7 @@ namespace StarterAssets
                     isGuard = true;
                     _animator.Play("Guard");
 
-                    PlayerS.Stamina = PlayerS.Stamina - 0.5f;
+                    PlayerS.Stamina = PlayerS.Stamina - 0.35f;
                 }
             }
             else
@@ -391,7 +464,7 @@ namespace StarterAssets
             if (_playerInput.actions["Sprint"].ReadValue<float>() >= 1f)
             {
                 if (isHit == false && isGuard == false && isAttack == false && !LockAction)
-                    PlayerS.Stamina = PlayerS.Stamina - 0.20f;
+                    PlayerS.Stamina = PlayerS.Stamina - 0.15f;
             }
 
             if (isHitAnim == true)

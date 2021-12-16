@@ -113,11 +113,13 @@ public class ActivateChest : MonoBehaviour
 				if (Roll <= 30)
                 {
 					ItemName.text = "Greater Healing Potion x1";
+					PlayerS.GreaterPotion += 1;
                 }
 
 				if (Roll >= 31)
 				{
 					ItemName.text = "Lesser Healing Potion x1";
+					PlayerS.LesserPotion += 1;
 				}
 
 				GameObject hObject = Instantiate(Shiny, new Vector3(transform.position.x, (transform.position.y), transform.position.z), Quaternion.Euler(new Vector3(90, Random.Range(0, 360), 0))) as GameObject;

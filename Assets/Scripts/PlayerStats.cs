@@ -18,6 +18,9 @@ public class PlayerStats : MonoBehaviour
     public float MaxEXP;
     public int level;
 
+    public int GreaterPotion;
+    public int LesserPotion;
+
     public float Timer;
     public float Minutes;
     public float Seconds;
@@ -51,6 +54,22 @@ public class PlayerStats : MonoBehaviour
     private StarterAssets.ThirdPersonController tpc;
     private GameObject Player;
 
+    public GameObject GreatPot;
+    public GameObject LessPot;
+    public TextMeshProUGUI GreatPotText;
+    public TextMeshProUGUI LessPotText;
+
+    public GameObject LevelUpText;
+    public GameObject LevelUpEffect;
+    public Animator LevelUpAnim;
+    public Animator LevelUpTextAnim;
+
+    public AudioSource LevelUpSound;
+    public GameObject LevelUpVFX;
+
+    public float LevelUpTime;
+    public bool LevelUpDone;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -58,18 +77,64 @@ public class PlayerStats : MonoBehaviour
 
         tpc = GetComponent<StarterAssets.ThirdPersonController>();
 
+        LevelUpAnim = LevelUpEffect.GetComponent<Animator>();
+        LevelUpTextAnim = LevelUpText.GetComponent<Animator>();
+
         Player = GameObject.FindWithTag("MainPlayer");
 
         LastPositionX = SavedData.LoadedPositionX;
         LastPositionY = SavedData.LoadedPositionY;
         LastPositionZ = SavedData.LoadedPositionZ;
 
-        Player.transform.position = new Vector3(LastPositionX, LastPositionY, LastPositionZ);
+        //Player.transform.position = new Vector3(LastPositionX, LastPositionY, LastPositionZ);
     }
 
     // Update is called once per frame
     void Update()
     {
+        if (LevelUpDone)
+        {
+            LevelUpTime += Time.deltaTime;
+            if (LevelUpTime > 4)
+            {
+                LevelUpDone = false;
+                LevelUpText.SetActive(false);
+            }
+        }
+        if (!LevelUpDone)
+        {
+            LevelUpTime = 0;
+        }
+
+        if (Health > MaxHealth)
+            Health = MaxHealth;
+
+        GreatPotText.text = "x" + GreaterPotion.ToString();
+        LessPotText.text = "x" + LesserPotion.ToString();
+
+        if (GreaterPotion >= 1)
+        {
+            GreatPot.SetActive(true);
+        }
+        if (LesserPotion >= 1)
+        {
+            LessPot.SetActive(true);
+        }
+        if (GreaterPotion <= 0)
+        {
+            if (GreaterPotion < 0)
+                GreaterPotion = 0;
+
+            GreatPot.SetActive(false);
+        }
+        if (LesserPotion <= 0)
+        {
+            if (LesserPotion < 0)
+                LesserPotion = 0;
+
+            LessPot.SetActive(false);
+        }
+
         deathtimer += Time.deltaTime;
 
         if (tpc.PlayerDeath)
@@ -157,6 +222,15 @@ public class PlayerStats : MonoBehaviour
             UpperAttackDamage += 5;
             Defense += 1;
             CritRate += 1;
+
+            LevelUpText.SetActive(true);
+            LevelUpAnim.Play("LevelUpAnim");
+            LevelUpTextAnim.Play("LevelUpFade");
+            LevelUpDone = true;
+            LevelUpSound.Play();
+
+            GameObject loObject = Instantiate(LevelUpVFX, new Vector3(transform.position.x, (transform.position.y + 1), transform.position.z), Quaternion.Euler(new Vector3(90, Random.Range(0, 360), 0))) as GameObject;
+            Destroy(loObject, 1);
         }
 
         LevelText.text = "LV." + level.ToString();

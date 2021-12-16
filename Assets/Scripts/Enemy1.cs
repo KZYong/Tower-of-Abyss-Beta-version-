@@ -85,6 +85,8 @@ public class Enemy1 : MonoBehaviour
     private Animator IndicatorAnim;
     public AudioSource AlertSound;
 
+    private bool deadeffectdone;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -155,7 +157,7 @@ public class Enemy1 : MonoBehaviour
 
         ECanAttack = EH.EnemyCanAttack;
 
-        if (isDamage == true && isAttacking == false)
+        if (isDamage == true && isAttacking == false && !isDeath)
         {
             agent.updateRotation = true;
 
@@ -186,10 +188,11 @@ public class Enemy1 : MonoBehaviour
             }
             Destroy(this.gameObject, 3);
 
-            if (deadtimer > 2)
-            {
-                GameObject hObject = Instantiate(EnemyExplode, new Vector3(transform.position.x, (player.transform.position.y), transform.position.z), Quaternion.Euler(new Vector3(90, Random.Range(0, 360), 0)));
+            if (deadtimer > 2 && !deadeffectdone)
+            { 
+                GameObject hObject = Instantiate(EnemyExplode, new Vector3(transform.position.x, (player.transform.position.y + 1), transform.position.z), Quaternion.Euler(new Vector3(90, Random.Range(0, 360), 0)));
                 Destroy(hObject, 1);
+                deadeffectdone = true;
             }
         }
 
@@ -210,7 +213,7 @@ public class Enemy1 : MonoBehaviour
 
         //Attacking
 
-        if (isAttacking == true)
+        if (isAttacking == true && !isDeath)
         {
             var rotationAngle = Quaternion.LookRotation(player.position - transform.position);
             transform.rotation = Quaternion.Slerp(transform.rotation, rotationAngle, Time.deltaTime * 5);

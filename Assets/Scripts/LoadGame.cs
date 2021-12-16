@@ -22,6 +22,10 @@ public class LoadGame : MonoBehaviour
 
     public float StartTimer;
 
+    public AudioSource AnyButtonSound;
+
+    public bool AnyKeyDone;
+
     private void Awake()
     {
       //  MenuAction.MainMenu.Enable();
@@ -59,15 +63,17 @@ public class LoadGame : MonoBehaviour
             }
         }
 
-        if (MenuAction.actions["PressAnyKey"].ReadValue<float>() >= 1f)
+        if (MenuAction.actions["PressAnyKey"].ReadValue<float>() >= 1f && !AnyKeyDone)
         {
-            if (StartTimer > 2)
+            if (StartTimer > 3)
             {
                 Debug.Log("any key pressed!");
                 //LoadGameScene();
                 AnyKey.SetActive(false);
                 Buttons.SetActive(true);
                 ButtonsAnim.Play("Fade");
+                AnyButtonSound.Play();
+                AnyKeyDone = true;
             }
             
         }

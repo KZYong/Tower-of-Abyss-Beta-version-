@@ -21,9 +21,15 @@ public class SavedData : MonoBehaviour
     public static float LoadedAttackLow;
     public static float LoadedAttackHigh;
 
+    public static int LoadStage;
+
     public GameObject Player;
     public static bool NewGame;
     public static bool Load;
+
+    public static bool Level1;
+    public static bool Level2;
+    public static bool Boss;
 
     // Start is called before the first frame update
     void Start()

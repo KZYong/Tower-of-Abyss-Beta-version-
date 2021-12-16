@@ -84,6 +84,22 @@
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "SlowTap"
+                },
+                {
+                    "name": "Use1",
+                    "type": "Button",
+                    "id": "fb61902e-ceeb-4fea-a242-bfe0be070a1e",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "SlowTap"
+                },
+                {
+                    "name": "Use2",
+                    "type": "Button",
+                    "id": "01d1cb3a-fc44-47e0-923b-4c8f73eaad9c",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "SlowTap"
                 }
             ],
             "bindings": [
@@ -381,6 +397,50 @@
                     "processors": "",
                     "groups": "Gamepad",
                     "action": "Interact",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "656072f1-a5ce-466b-8c5b-cbaa7bb45f52",
+                    "path": "<Keyboard>/1",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "KeyboardMouse",
+                    "action": "Use1",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "1d8c1d80-4c0a-40c4-9317-fd0fbf748bb2",
+                    "path": "<Gamepad>/dpad/left",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Gamepad",
+                    "action": "Use1",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "27c0726d-c786-416f-aaa8-34125b461571",
+                    "path": "<Keyboard>/2",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "KeyboardMouse",
+                    "action": "Use2",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "a3df6fe6-d449-41ed-ab87-dbff6abcfcb8",
+                    "path": "<Gamepad>/dpad/right",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Gamepad",
+                    "action": "Use2",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
