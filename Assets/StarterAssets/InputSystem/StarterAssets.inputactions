@@ -444,7 +444,7 @@
                 {
                     "name": "",
                     "id": "a3df6fe6-d449-41ed-ab87-dbff6abcfcb8",
-                    "path": "<Gamepad>/dpad/right",
+                    "path": "<Gamepad>/dpad/up",
                     "interactions": "",
                     "processors": "",
                     "groups": "Gamepad",

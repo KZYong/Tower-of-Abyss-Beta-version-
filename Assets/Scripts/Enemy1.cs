@@ -87,6 +87,10 @@ public class Enemy1 : MonoBehaviour
 
     private bool deadeffectdone;
 
+    private float OriginalPositionX;
+    private float OriginalPositionY;
+    private float OriginalPositionZ;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -100,6 +104,10 @@ public class Enemy1 : MonoBehaviour
         EnemyCounter = FindObjectOfType<CountEnemy>();
 
         IndicatorAnim = Indicator.GetComponent<Animator>();
+
+        OriginalPositionX = transform.position.x;
+        OriginalPositionX = transform.position.y;
+        OriginalPositionX = transform.position.z;
     }
 
     private void Awake()
@@ -144,7 +152,7 @@ public class Enemy1 : MonoBehaviour
         }
 
         if (PlayerDetected == false)
-            sightRange = 5;
+            sightRange = 8;
 
 
         /// debugtimer += Time.deltaTime;

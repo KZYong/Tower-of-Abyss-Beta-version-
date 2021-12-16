@@ -2,6 +2,7 @@
 #if ENABLE_INPUT_SYSTEM && STARTER_ASSETS_PACKAGES_CHECKED
 using UnityEngine.InputSystem;
 using TMPro;
+using UnityEngine.UI;
 #endif
 
 /* Note: animations are called via the controller for both the character and capsule using animator null checks
@@ -180,7 +181,9 @@ namespace StarterAssets
         public GameObject PlayerBar;
 
         public GameObject SaveDialogue;
-        private Dialogue SavingDialogue;
+        private DialogueSystem SavingDialogue;
+
+        public Button ReturnButton;
 
         private void Awake()
         {
@@ -217,7 +220,7 @@ namespace StarterAssets
             LockAction = true;
             LockCameraPosition = true;
 
-            SavingDialogue = SaveDialogue.GetComponent<Dialogue>();
+            SavingDialogue = SaveDialogue.GetComponent<DialogueSystem>();
         }
 
         private void Update()
@@ -320,7 +323,7 @@ namespace StarterAssets
                 DialogueDone = false;
             }
 
-            if (_playerInput.actions["Menu"].ReadValue<float>() == 1f && MenuOpened == false && !PlayerDeath)
+            if (_playerInput.actions["Menu"].ReadValue<float>() == 1f && MenuOpened == false && !PlayerDeath && !isDialogue)
                 if (CursorTimer > 0.5)
                 {
                     Cursor.lockState = CursorLockMode.None;
@@ -334,6 +337,8 @@ namespace StarterAssets
                     MenuPanelAnim.Play("MenuPanelAnim");
                     MenuListAnim.Play("MenuAnim");
                     StatListAnim.Play("UISlideDown");
+
+                    ReturnButton.Select();
 
                     BGM1.volume = BGM1.volume / 3;
                     BGM2.volume = BGM2.volume / 3;
@@ -383,12 +388,11 @@ namespace StarterAssets
 
             if (canChest == true)
                 InteractUI.SetActive(true);
-            if (canChest == false)
-                InteractUI.SetActive(false);
             if (canSave == true)
                 InteractUI.SetActive(true);
-            if (canSave == false)
+            if (canChest == false && canSave == false)
                 InteractUI.SetActive(false);
+
 
             if (_playerInput.actions["Interact"].ReadValue<float>() == 1f && !isAttack && isHit == false && !isSkill && !LockAction)
             {
@@ -397,15 +401,15 @@ namespace StarterAssets
                     Chest = TheChest.GetComponent<ActivateChest>();
                     Chest._open = true;
                 }
-                if (canSave == true && Grounded)
+                if (canSave == true && Grounded && !CountEnemy.InBattle)
                 {
                     isDialogue = true;
                     SaveDialogue.SetActive(true);
                     SavingDialogue.StartDialogue();
 
-                    Save = TheSave.GetComponent<SaveNPC>();
-                    Save.Saving = true;
-                    Debug.Log("Game Saved!");
+                    //Save = TheSave.GetComponent<SaveNPC>();
+                    //Save.Saving = true;
+                    //Debug.Log("Game Saved!");
                 }
             }
 
@@ -511,7 +515,7 @@ namespace StarterAssets
                     isGuard = true;
                     _animator.Play("Guard");
 
-                    PlayerS.Stamina = PlayerS.Stamina - 0.35f;
+                    PlayerS.Stamina = PlayerS.Stamina - 0.5f;
                 }
             }
             else

@@ -14,6 +14,8 @@ public class CountEnemy : MonoBehaviour
     public bool BattlePlaying;
     public bool ExplorePlaying;
 
+    public static bool InBattle;
+
     public float WaitTimer;
 
     public bool BattleMode;
@@ -32,6 +34,7 @@ public class CountEnemy : MonoBehaviour
         if (EnemyCount > 0)
         {
             BattleMode = true;
+            InBattle = true;
 
             //Debug.Log("Battle Start!");
 
@@ -57,7 +60,7 @@ public class CountEnemy : MonoBehaviour
         if (EnemyCount == 0)
         {
             BattleMode = false;
-
+            InBattle = false;
             //Debug.Log("Battle End!");
 
             if (BattlePlaying == true)

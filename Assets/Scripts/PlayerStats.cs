@@ -248,7 +248,13 @@ public class PlayerStats : MonoBehaviour
             StaminaAnim.Play("StaminaWarningAnim");
         }
 
-        MaxEXP = 25 * level;
+        if (level == 1)
+            MaxEXP = 20;
+
+        if (level >= 2)
+        {
+            MaxEXP = 20 + (15 * (level-1));
+        }
 
         if (EXP >= MaxEXP)
         {

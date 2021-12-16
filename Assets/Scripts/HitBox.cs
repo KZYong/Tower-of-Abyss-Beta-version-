@@ -73,7 +73,7 @@ public class HitBox : MonoBehaviour
             AttackCD += Time.deltaTime;
         if (!AttackDone)
             AttackCD = 0;
-        if (AttackCD > 0.25) 
+        if (AttackCD > 0.15) 
             AttackDone = false;
 
        // if (tpc.isDamage == true)

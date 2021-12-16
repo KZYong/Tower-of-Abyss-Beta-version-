@@ -54,6 +54,7 @@ public class ActivateChest : MonoBehaviour
 
 	public GameObject Player;
 
+	public int EnemyNumbers;
 
 	private void Start()
     {
@@ -77,10 +78,31 @@ public class ActivateChest : MonoBehaviour
 		if (ChestUnlock)
 			ChestLockEffect.SetActive(false);
 
-		if (Enemy.isDeath == true)
-        {
-			ChestUnlock = true;
-        }
+		//Unlock Chest (According the Enemy Count)
+
+		if (EnemyNumbers == 1)
+		{
+			if (Enemy.isDeath == true)
+			{
+				ChestUnlock = true;
+			}
+		}
+
+		if (EnemyNumbers == 2)
+		{
+			if (Enemy.isDeath == true && Enemy2.isDeath == true)
+			{
+				ChestUnlock = true;
+			}
+		}
+
+		if (EnemyNumbers == 3)
+		{
+			if (Enemy.isDeath == true && Enemy2.isDeath == true && Enemy3.isDeath == true)
+			{
+				ChestUnlock = true;
+			}
+		}
 
 		if (Rewarding)
         {
@@ -125,7 +147,7 @@ public class ActivateChest : MonoBehaviour
 				GameObject hObject = Instantiate(Shiny, new Vector3(transform.position.x, (transform.position.y), transform.position.z), Quaternion.Euler(new Vector3(90, Random.Range(0, 360), 0))) as GameObject;
 				Destroy(hObject, 1);
 
-				EXPGet = Random.Range(15, 20);
+				EXPGet = Random.Range(14, 18);
 				PlayerS.EXP += EXPGet;
 
 				EXPAmount.text = "EXP+" + EXPGet.ToString("F0");

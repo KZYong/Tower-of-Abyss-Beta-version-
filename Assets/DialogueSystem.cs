@@ -3,9 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using UnityEngine.InputSystem;
+using UnityEngine.UI;
 
 
-public class Dialogue : MonoBehaviour
+public class DialogueSystem : MonoBehaviour
 {
     public TextMeshProUGUI textComponent;
     public string[] lines;
@@ -16,6 +17,13 @@ public class Dialogue : MonoBehaviour
     private float DialogueTimer;
     private bool DialoguePressed;
 
+    public bool LastLine;
+
+    public GameObject SaveButtons;
+    public Button YesButton;
+
+    SaveNPC Save;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -23,20 +31,12 @@ public class Dialogue : MonoBehaviour
 
         textComponent.text = string.Empty;
 
-        if (!SavedData.StartDialogue)
-        StartDialogue();
+        //StartDialogue();
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (SavedData.StartDialogue == true)
-        {
-            gameObject.SetActive(false);
-            tpc.isDialogue = false;
-            tpc.DialogueDone = true;
-        }
-
         if (DialoguePressed)
         {
             DialogueTimer += Time.deltaTime;
@@ -49,6 +49,8 @@ public class Dialogue : MonoBehaviour
 
         if (tpc._playerInput.actions["DialogueNext"].ReadValue<float>() == 1f && !DialoguePressed)
         {
+            if (index == 0)
+            {
                 if (textComponent.text == lines[index])
                 {
                     NextLine();
@@ -58,6 +60,39 @@ public class Dialogue : MonoBehaviour
                     StopAllCoroutines();
                     textComponent.text = lines[index];
                 }
+                DialoguePressed = true;
+            }
+
+            if (index == 1)
+            {
+                if (textComponent.text == lines[index])
+                {
+                    SaveButtons.SetActive(true);
+                    YesButton.Select();
+                }
+                else
+                {
+                    StopAllCoroutines();
+                    textComponent.text = lines[index];
+                    SaveButtons.SetActive(true);
+                    YesButton.Select();
+                }
+                DialoguePressed = true;
+            }
+
+            if (index == 2)
+            {
+                if (textComponent.text == lines[index])
+                {
+                    NextLine();
+                }
+                else
+                {
+                    StopAllCoroutines();
+                    textComponent.text = lines[index];
+                }
+                DialoguePressed = true;
+            }
 
             DialoguePressed = true;
         }
@@ -69,6 +104,7 @@ public class Dialogue : MonoBehaviour
         index = 0;
         StartCoroutine(TypeLine());
         tpc.isDialogue = true;
+        DialoguePressed = true;
     }
 
     IEnumerator TypeLine()
@@ -93,7 +129,38 @@ public class Dialogue : MonoBehaviour
             gameObject.SetActive(false);
             tpc.isDialogue = false;
             tpc.DialogueDone = true;
-            SavedData.StartDialogue = true;
         }
+    }
+
+    public void YesSave()
+    {
+        LastLine = true;
+
+        Save = tpc.TheSave.GetComponent<SaveNPC>();
+        Save.Saving = true;
+        Debug.Log("Game Saved!");
+
+        if (textComponent.text == lines[index])
+        {
+            NextLine();
+            LastLine = false;
+            SaveButtons.SetActive(false);
+        }
+        else
+        {
+            StopAllCoroutines();
+            textComponent.text = lines[index];
+        }
+
+        DialoguePressed = true;
+    }
+
+    public void NoSave()
+    {
+        SaveButtons.SetActive(false);
+        gameObject.SetActive(false);
+        tpc.isDialogue = false;
+        tpc.DialogueDone = true;
+        
     }
 }
