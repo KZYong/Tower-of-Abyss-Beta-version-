@@ -1,5 +1,5 @@
-using System.Collections;
-using System.Collections.Generic;
+using System.IO;
+using System.Runtime.Serialization.Formatters.Binary;
 using UnityEngine;
 
 public class SavedData : MonoBehaviour
@@ -30,6 +30,7 @@ public class SavedData : MonoBehaviour
     public GameObject Player;
     public static bool NewGame;
     public static bool Load;
+    public static bool LoadStats;
     public static bool PlayerDead;
 
     public static bool Level1;
@@ -55,6 +56,38 @@ public class SavedData : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        Debug.Log("Current Saved Position is " + LoadedPositionX + "," + LoadedPositionY + "," + LoadedPositionZ);
+       // Debug.Log("Current Saved Position is " + LoadedPositionX + "," + LoadedPositionY + "," + LoadedPositionZ);
+
+        if (LoadStats == true)
+        {
+            LoadData();
+            LoadStats = false;
+        }
+    }
+
+    public void LoadData()
+    {
+        string destination = Application.persistentDataPath + "/save.dat";
+        FileStream file;
+
+        if (File.Exists(destination)) file = File.OpenRead(destination);
+        else
+        {
+            Debug.LogError("Save File not found");
+            return;
+        }
+
+        BinaryFormatter bf = new BinaryFormatter();
+        NewStats data = (NewStats)bf.Deserialize(file);
+        file.Close();
+
+        LoadStage = data.CurrentStage;
+        LoadedPositionX = data.positionX;
+        LoadedPositionY = data.positionY;
+        LoadedPositionZ = data.positionZ;
+        LoadedHealth = data.CurrentHealth;
+        LoadedMaxHealth = data.CurrentMaxHealth;
+
+        Debug.Log("Saved Position is " + data.positionX + "," + data.positionY + "," + data.positionZ); 
     }
 }

@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Runtime.Serialization.Formatters.Binary;
+using System.IO;
 
 public class SaveNPC : MonoBehaviour
 {
@@ -47,6 +49,10 @@ public class SaveNPC : MonoBehaviour
 
 			SavedData.LoadStage = 1;
 
+			//
+
+			SaveToFile();
+
 			Saving = false;
         }
     }
@@ -59,7 +65,7 @@ public class SaveNPC : MonoBehaviour
 			tpc.canSave = true;
 			tpc.TheSave = this.gameObject;
 
-			Debug.Log("Save collided!");
+			//Debug.Log("Save collided!");
 
 		}
 	}
@@ -71,5 +77,19 @@ public class SaveNPC : MonoBehaviour
 			canInteract = false;
 			tpc.canSave = false;
 		}
+	}
+
+	public void SaveToFile()
+    {
+		string destination = Application.persistentDataPath + "/save.dat";
+		FileStream file;
+
+		if (File.Exists(destination)) file = File.OpenWrite(destination);
+		else file = File.Create(destination);
+
+		NewStats data = new NewStats(SavedData.LoadStage, SavedData.LoadedPositionX, SavedData.LoadedPositionY, SavedData.LoadedPositionZ, SavedData.LoadedHealth, SavedData.LoadedMaxHealth);
+		BinaryFormatter bf = new BinaryFormatter();
+		bf.Serialize(file, data);
+		file.Close();
 	}
 }

@@ -79,7 +79,6 @@ public class PlayerStats : MonoBehaviour
     private Animator DeadGlowAnim;
     private float DeadTimer;
 
-    // Start is called before the first frame update
     void Start()
     {
         StaminaAnim = StaminaWarning.GetComponent<Animator>();
@@ -257,7 +256,7 @@ public class PlayerStats : MonoBehaviour
 
         if (level >= 2)
         {
-            MaxEXP = 20 + (15 * (level-1));
+            MaxEXP = 20 + (25 * (level-1));
         }
 
         if (EXP >= MaxEXP)

@@ -80,6 +80,11 @@ public class ActivateChest : MonoBehaviour
 
 		//Unlock Chest (According the Enemy Count)
 
+		if (EnemyNumbers == 0)
+        {
+			ChestUnlock = true;
+        }
+
 		if (EnemyNumbers == 1)
 		{
 			if (Enemy.isDeath == true)

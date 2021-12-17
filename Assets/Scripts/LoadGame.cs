@@ -60,14 +60,20 @@ public class LoadGame : MonoBehaviour
             {
                 blackStart = false;
 
-                if (!SavedData.Load)
-                MainMenuManager.instance.LoadGame();
 
-                if (SavedData.Load)
+                if (SavedData.LoadStats)
                 {
                     if (SavedData.LoadStage == 1)
-                    MainMenuManager.instance.LoadGame();
+                    {
+                        
+                        MainMenuManager.instance.LoadGame();
+
+                    }
                 }
+
+                if (!SavedData.LoadStats)
+                MainMenuManager.instance.LoadGame();
+
             }
         }
 
@@ -101,6 +107,7 @@ public class LoadGame : MonoBehaviour
         blackscreenanimator.Play("FadeToBlack");
 
         SavedData.Load = true;
+        SavedData.LoadStats = true;
     }
 
     public void QuitGame()
