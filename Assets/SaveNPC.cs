@@ -47,7 +47,41 @@ public class SaveNPC : MonoBehaviour
 			SavedData.LoadedHPPot1 = PlayerS.LesserPotion;
 			SavedData.LoadedHPPot2 = PlayerS.GreaterPotion;
 
-			SavedData.LoadStage = 1;
+			if (PlayerS.Camp1) SavedData.LoadedCamp1 = true;
+			if (!PlayerS.Camp1) SavedData.LoadedCamp1 = false;
+
+			if (PlayerS.Camp2) SavedData.LoadedCamp2 = true;
+			if (!PlayerS.Camp2) SavedData.LoadedCamp2 = false;
+
+			if (PlayerS.Camp3) SavedData.LoadedCamp3 = true;
+			if (!PlayerS.Camp3) SavedData.LoadedCamp3 = false;
+
+			if (PlayerS.Camp4) SavedData.LoadedCamp4 = true;
+			if (!PlayerS.Camp4) SavedData.LoadedCamp4 = false;
+
+			if (PlayerS.Camp5) SavedData.LoadedCamp5 = true;
+			if (!PlayerS.Camp5) SavedData.LoadedCamp5 = false;
+
+			if (PlayerS.Camp6) SavedData.LoadedCamp6 = true;
+			if (!PlayerS.Camp6) SavedData.LoadedCamp6 = false;
+
+			if (PlayerS.Camp7) SavedData.LoadedCamp7 = true;
+			if (!PlayerS.Camp7) SavedData.LoadedCamp7 = false;
+
+			if (PlayerS.FreeChest1) SavedData.LoadedFreeChest1 = true;
+			if (!PlayerS.FreeChest1) SavedData.LoadedFreeChest1 = false;
+
+			if (PlayerS.FreeChest2) SavedData.LoadedFreeChest2 = true;
+			if (!PlayerS.FreeChest2) SavedData.LoadedFreeChest2 = false;
+
+			if (PlayerS.FreeChest3) SavedData.LoadedFreeChest3 = true;
+			if (!PlayerS.FreeChest3) SavedData.LoadedFreeChest3 = false;
+
+
+			SavedData.LoadStage = PlayerS.ThisStage;
+
+			if (SavedData.NewGame)
+				SavedData.NewGame = false;
 
 			//
 
@@ -87,7 +121,17 @@ public class SaveNPC : MonoBehaviour
 		if (File.Exists(destination)) file = File.OpenWrite(destination);
 		else file = File.Create(destination);
 
-		NewStats data = new NewStats(SavedData.LoadStage, SavedData.LoadedPositionX, SavedData.LoadedPositionY, SavedData.LoadedPositionZ, SavedData.LoadedHealth, SavedData.LoadedMaxHealth);
+		NewStats data = new NewStats(SavedData.LoadStage,
+			SavedData.LoadedPositionX, SavedData.LoadedPositionY, SavedData.LoadedPositionZ,
+			SavedData.LoadedHealth, SavedData.LoadedMaxHealth,
+			SavedData.LoadedLevel, SavedData.LoadedEXP, SavedData.LoadedMaxEXP,
+			SavedData.LoadedCritRate, SavedData.LoadedDefense, SavedData.LoadedSeconds,
+			SavedData.LoadedAttackLow, SavedData.LoadedAttackHigh,
+			SavedData.LoadedHPPot1, SavedData.LoadedHPPot2,
+			SavedData.LoadedCamp1, SavedData.LoadedCamp2, SavedData.LoadedCamp3, SavedData.LoadedCamp4, SavedData.LoadedCamp5, SavedData.LoadedCamp6,
+			SavedData.LoadedCamp7, SavedData.LoadedFreeChest1, SavedData.LoadedFreeChest2, SavedData.LoadedFreeChest3,
+			SavedData.StartDialogue
+			);
 		BinaryFormatter bf = new BinaryFormatter();
 		bf.Serialize(file, data);
 		file.Close();

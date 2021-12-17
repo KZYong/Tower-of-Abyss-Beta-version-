@@ -227,10 +227,10 @@ public class Enemy1 : MonoBehaviour
             transform.rotation = Quaternion.Slerp(transform.rotation, rotationAngle, Time.deltaTime * 5);
         }
 
-        if (ECanAttack == true && isAttacking == true && isDeath == false)
+        if (ECanAttack == true && isAttacking == true && isDeath == false && !tpc.isDialogue)
         {
 
-            if (tpc.isGuard == false && tpc.isHit == false && tpc.PlayerDeath == false)
+            if (tpc.isGuard == false && tpc.isHit == false && tpc.PlayerDeath == false && tpc.isSkill == false)
             {
                 amountDamage = Player.Defense / 100;
                 amountDamage = eAttack * (1 - amountDamage);

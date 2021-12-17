@@ -947,7 +947,8 @@ PrefabInstance:
       propertyPath: loadingScreenAnimator
       value: 
       objectReference: {fileID: 1040798638}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 322932923360735020, guid: 1b38c63ec6762174091d6998e5801939, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 1b38c63ec6762174091d6998e5801939, type: 3}
 --- !u!1 &2048798089
 GameObject:

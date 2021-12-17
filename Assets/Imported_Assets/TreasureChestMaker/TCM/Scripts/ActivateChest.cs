@@ -18,6 +18,8 @@ public class ActivateChest : MonoBehaviour
 
 	public bool ChestUnlock;
 
+	public bool Opened;
+
 	private StarterAssets.ThirdPersonController tpc;
 	PlayerStats PlayerS;
 
@@ -73,39 +75,42 @@ public class ActivateChest : MonoBehaviour
 
     void Update()
 	{
-		if (!ChestUnlock)
+		if (!ChestUnlock && !Opened)
 			ChestLockEffect.SetActive(true);
 		if (ChestUnlock)
 			ChestLockEffect.SetActive(false);
 
 		//Unlock Chest (According the Enemy Count)
 
-		if (EnemyNumbers == 0)
-        {
-			ChestUnlock = true;
-        }
-
-		if (EnemyNumbers == 1)
+		if (!Opened)
 		{
-			if (Enemy.isDeath == true)
+			if (EnemyNumbers == 0)
 			{
 				ChestUnlock = true;
 			}
-		}
 
-		if (EnemyNumbers == 2)
-		{
-			if (Enemy.isDeath == true && Enemy2.isDeath == true)
+			if (EnemyNumbers == 1)
 			{
-				ChestUnlock = true;
+				if (Enemy.isDeath == true)
+				{
+					ChestUnlock = true;
+				}
 			}
-		}
 
-		if (EnemyNumbers == 3)
-		{
-			if (Enemy.isDeath == true && Enemy2.isDeath == true && Enemy3.isDeath == true)
+			if (EnemyNumbers == 2)
 			{
-				ChestUnlock = true;
+				if (Enemy.isDeath == true && Enemy2.isDeath == true)
+				{
+					ChestUnlock = true;
+				}
+			}
+
+			if (EnemyNumbers == 3)
+			{
+				if (Enemy.isDeath == true && Enemy2.isDeath == true && Enemy3.isDeath == true)
+				{
+					ChestUnlock = true;
+				}
 			}
 		}
 
@@ -127,7 +132,6 @@ public class ActivateChest : MonoBehaviour
 
 		if (_open)
 		{
-			ChestClicked(lidOpen.rotation);
 
 			if (!doneOpen)
 			{
@@ -170,11 +174,15 @@ public class ActivateChest : MonoBehaviour
 
 				doneOpen = true;
 				Rewarding = true;
+				Opened = true;
 			}
 		}
-		else
+
+		if (Opened)
 		{
-			ChestClicked(lidClose.rotation);
+			ChestClicked(lidOpen.rotation);
+			ChestLockEffect.SetActive(false);
+			//ChestUnlock = false;
 		}
 	}
 
@@ -187,16 +195,11 @@ public class ActivateChest : MonoBehaviour
 		}
 	}
 
-	void OnMouseDown()
-	{
-		if (canClose) _open = !_open; else _open = true;
-	}
-
 	private void OnTriggerStay(Collider other)
 	{
 		if (other.gameObject.tag == "Player")
         {
-			if (ChestUnlock && !doneOpen)
+			if (ChestUnlock && !doneOpen && !Opened)
 			{
 				canOpen = true;
 				tpc.TheChest = this.gameObject;

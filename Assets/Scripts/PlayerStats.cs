@@ -79,6 +79,13 @@ public class PlayerStats : MonoBehaviour
     private Animator DeadGlowAnim;
     private float DeadTimer;
 
+    public int ThisStage;
+
+    CampManager campmanage;
+
+    public bool Camp1; public bool Camp2; public bool Camp3; public bool Camp4; public bool Camp5; public bool Camp6; public bool Camp7;
+    public bool FreeChest1; public bool FreeChest2; public bool FreeChest3;
+
     void Start()
     {
         StaminaAnim = StaminaWarning.GetComponent<Animator>();
@@ -90,6 +97,8 @@ public class PlayerStats : MonoBehaviour
         DeadGlowAnim = DeadGlow.GetComponent<Animator>();
         DeadPanelAnim = DeadPanel.GetComponent<Animator>();
 
+        campmanage = FindObjectOfType<CampManager>();
+
         Player = GameObject.FindWithTag("MainPlayer");
 
         LastPositionX = SavedData.LoadedPositionX;
@@ -97,13 +106,13 @@ public class PlayerStats : MonoBehaviour
         LastPositionZ = SavedData.LoadedPositionZ;
 
         //LoadGame
-        if (SavedData.Load)
+        if (SavedData.Load && !SavedData.NewGame)
         {
             LoadStats();
             SavedData.Load = false;
         }
 
-        if (SavedData.PlayerDead)
+        if (SavedData.PlayerDead && !SavedData.NewGame)
         {
             LoadStats();
             SavedData.PlayerDead = false;
@@ -289,6 +298,7 @@ public class PlayerStats : MonoBehaviour
     {
         Player.transform.position = new Vector3(LastPositionX, LastPositionY, LastPositionZ);
 
+        //PlayerInformation Initialize
         Health = SavedData.LoadedHealth;
         MaxHealth = SavedData.LoadedMaxHealth;
         level = SavedData.LoadedLevel;
@@ -302,5 +312,38 @@ public class PlayerStats : MonoBehaviour
         UpperAttackDamage = SavedData.LoadedAttackHigh;
         LesserPotion = SavedData.LoadedHPPot1;
         GreaterPotion = SavedData.LoadedHPPot2;
+
+        //MapInformation Initialize
+        if (SavedData.LoadedCamp1) Camp1 = true;
+        if (!SavedData.LoadedCamp1) Camp1 = false;
+
+        if (SavedData.LoadedCamp2) Camp2 = true;
+        if (!SavedData.LoadedCamp2) Camp2 = false;
+
+        if (SavedData.LoadedCamp3) Camp3 = true;
+        if (!SavedData.LoadedCamp3) Camp3 = false;
+
+        if (SavedData.LoadedCamp4) Camp4 = true;
+        if (!SavedData.LoadedCamp4) Camp4 = false;
+
+        if (SavedData.LoadedCamp5) Camp5 = true;
+        if (!SavedData.LoadedCamp5) Camp5 = false;
+
+        if (SavedData.LoadedCamp6) Camp6 = true;
+        if (!SavedData.LoadedCamp6) Camp6 = false;
+
+        if (SavedData.LoadedCamp7) Camp7 = true;
+        if (!SavedData.LoadedCamp7) Camp7 = false;
+
+        campmanage.LoadCamp();
+
+        if (SavedData.LoadedFreeChest1) FreeChest1 = true;
+        if (!SavedData.LoadedFreeChest1) FreeChest1 = false;
+
+        if (SavedData.LoadedFreeChest2) FreeChest2 = true;
+        if (!SavedData.LoadedFreeChest2) FreeChest2 = false;
+
+        if (SavedData.LoadedFreeChest3) FreeChest3 = true;
+        if (!SavedData.LoadedFreeChest3) FreeChest3 = false;
     }
 }

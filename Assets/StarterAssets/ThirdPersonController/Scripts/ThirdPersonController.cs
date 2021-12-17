@@ -449,7 +449,7 @@ namespace StarterAssets
             if (!itemUsed)
                 itemCD = 0;
 
-            if (_playerInput.actions["Use1"].ReadValue<float>() == 1f && isHit == false && !LockAction && !itemUsed && !isAttack)
+            if (_playerInput.actions["Use1"].ReadValue<float>() == 1f && isHit == false && !LockAction && !itemUsed)
             {
                 if (PlayerS.LesserPotion >= 1 && PlayerS.Health < PlayerS.MaxHealth)
                 {
@@ -469,7 +469,7 @@ namespace StarterAssets
                 }
             }
 
-            if (_playerInput.actions["Use2"].ReadValue<float>() == 1f && isHit == false && !LockAction && !itemUsed && !isAttack)
+            if (_playerInput.actions["Use2"].ReadValue<float>() == 1f && isHit == false && !LockAction && !itemUsed)
             {
                 if (PlayerS.GreaterPotion >= 1 && PlayerS.Health < PlayerS.MaxHealth)
                 {
