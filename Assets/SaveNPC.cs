@@ -39,7 +39,7 @@ public class SaveNPC : MonoBehaviour
 			SavedData.LoadedMaxEXP = PlayerS.MaxEXP;
 			SavedData.LoadedCritRate = PlayerS.CritRate;
 			SavedData.LoadedDefense = PlayerS.Defense;
-			SavedData.LoadedSeconds = PlayerS.Seconds;
+			SavedData.LoadedSeconds = PlayerS.TotalSeconds;
 			SavedData.LoadedAttackLow = PlayerS.LowerAttackDamage;
 			SavedData.LoadedAttackHigh = PlayerS.UpperAttackDamage;
 			SavedData.LoadedHPPot1 = PlayerS.LesserPotion;

@@ -24,6 +24,7 @@ public class PlayerStats : MonoBehaviour
     public float Timer;
     public float Minutes;
     public float Seconds;
+    public float TotalSeconds;
 
     public TextMeshProUGUI LevelText;
 
@@ -116,6 +117,8 @@ public class PlayerStats : MonoBehaviour
     {
         if (Health <= 0)
         {
+            SavedData.LoadedSeconds = TotalSeconds;
+
             DeadScreen.SetActive(true);
             DeadPanel.SetActive(true);
             DeadPanelAnim.Play("DeadPanelAnim");
@@ -190,6 +193,7 @@ public class PlayerStats : MonoBehaviour
 
         Timer += Time.deltaTime;
         Seconds += Time.deltaTime;
+        TotalSeconds += Time.deltaTime;
 
         if (Seconds >= 60f)
         {
@@ -294,6 +298,7 @@ public class PlayerStats : MonoBehaviour
         CritRate = SavedData.LoadedCritRate;
         Defense = SavedData.LoadedDefense;
         Seconds = SavedData.LoadedSeconds;
+        TotalSeconds = SavedData.LoadedSeconds;
         LowerAttackDamage = SavedData.LoadedAttackLow;
         UpperAttackDamage = SavedData.LoadedAttackHigh;
         LesserPotion = SavedData.LoadedHPPot1;
