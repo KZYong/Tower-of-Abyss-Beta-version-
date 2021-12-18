@@ -381,7 +381,7 @@ namespace StarterAssets
                 GuardLock = true;
             }
 
-            if (PlayerS.Stamina >= 15f)
+            if (PlayerS.Stamina >= 35f)
             {
                 GuardLock = false;
             }
@@ -454,7 +454,7 @@ namespace StarterAssets
                 if (PlayerS.LesserPotion >= 1 && PlayerS.Health < PlayerS.MaxHealth)
                 {
                     float HealAmount;
-                    HealAmount = PlayerS.MaxHealth * 0.2f;
+                    HealAmount = PlayerS.MaxHealth * 0.15f;
                     PlayerS.LesserPotion -= 1;
                     PlayerS.Health += HealAmount;
                     itemUsed = true;
@@ -474,7 +474,7 @@ namespace StarterAssets
                 if (PlayerS.GreaterPotion >= 1 && PlayerS.Health < PlayerS.MaxHealth)
                 {
                     float HealAmount;
-                    HealAmount = PlayerS.MaxHealth * 0.35f;
+                    HealAmount = PlayerS.MaxHealth * 0.3f;
                     PlayerS.GreaterPotion -= 1;
                     PlayerS.Health += HealAmount;
                     itemUsed = true;
@@ -515,7 +515,7 @@ namespace StarterAssets
                     isGuard = true;
                     _animator.Play("Guard");
 
-                    PlayerS.Stamina = PlayerS.Stamina - 0.5f;
+                    //PlayerS.Stamina = PlayerS.Stamina - 0.5f;
                 }
             }
             else

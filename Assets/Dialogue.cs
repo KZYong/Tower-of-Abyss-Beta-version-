@@ -16,6 +16,8 @@ public class Dialogue : MonoBehaviour
     private float DialogueTimer;
     private bool DialoguePressed;
 
+    public GameObject DownArrow;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -46,6 +48,11 @@ public class Dialogue : MonoBehaviour
                 DialogueTimer = 0;
             }
         }
+
+        if (textComponent.text == lines[index])
+            DownArrow.SetActive(true);
+        if (textComponent.text != lines[index])
+            DownArrow.SetActive(false);
 
         if (tpc._playerInput.actions["DialogueNext"].ReadValue<float>() == 1f && !DialoguePressed)
         {
@@ -91,6 +98,7 @@ public class Dialogue : MonoBehaviour
         else
         {
             gameObject.SetActive(false);
+            DownArrow.SetActive(false);
             tpc.isDialogue = false;
             tpc.DialogueDone = true;
             SavedData.StartDialogue = true;

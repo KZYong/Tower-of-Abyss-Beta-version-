@@ -253,9 +253,14 @@ public class Enemy1 : MonoBehaviour
                 Destroy(pObject, 1);
 
                 if (!parrytimesound)
+                {
                     ParrySound.Play();
+                    Player.Stamina -= Random.Range(35, 50);
+                }
 
                 parrytimesound = true;
+
+                
 
                 EH.EnemyCanAttack = false;
             }

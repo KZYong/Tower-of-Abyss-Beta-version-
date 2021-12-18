@@ -50,6 +50,9 @@ public class SavedData : MonoBehaviour
     public static bool Level2;
     public static bool Boss;
 
+    public static bool KeyboardMode;
+    public static bool GamepadMode;
+
     // Start is called before the first frame update
     void Start()
     {

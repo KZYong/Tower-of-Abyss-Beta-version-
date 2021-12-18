@@ -141,13 +141,13 @@ public class ActivateChest : MonoBehaviour
 
 				Roll = Random.Range(1, 100);
 
-				if (Roll <= 30)
+				if (Roll <= 19)
                 {
 					ItemName.text = "Greater Healing Potion x1";
 					PlayerS.GreaterPotion += 1;
                 }
 
-				if (Roll >= 31)
+				if (Roll >= 20)
 				{
 					ItemName.text = "Lesser Healing Potion x1";
 					PlayerS.LesserPotion += 1;

@@ -24,6 +24,8 @@ public class DialogueSystem : MonoBehaviour
 
     SaveNPC Save;
 
+    public GameObject DownArrow;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -46,6 +48,11 @@ public class DialogueSystem : MonoBehaviour
                 DialogueTimer = 0;
             }
         }
+
+        if (textComponent.text == lines[index] && index != 1)
+            DownArrow.SetActive(true);
+        if (textComponent.text != lines[index])
+            DownArrow.SetActive(false);
 
         if (tpc._playerInput.actions["DialogueNext"].ReadValue<float>() == 1f && !DialoguePressed)
         {
@@ -78,6 +85,7 @@ public class DialogueSystem : MonoBehaviour
                     YesButton.Select();
                 }
                 DialoguePressed = true;
+                DownArrow.SetActive(false);
             }
 
             if (index == 2)
@@ -129,6 +137,7 @@ public class DialogueSystem : MonoBehaviour
             gameObject.SetActive(false);
             tpc.isDialogue = false;
             tpc.DialogueDone = true;
+            DownArrow.SetActive(false);
         }
     }
 
@@ -157,6 +166,7 @@ public class DialogueSystem : MonoBehaviour
 
     public void NoSave()
     {
+        DownArrow.SetActive(false);
         SaveButtons.SetActive(false);
         gameObject.SetActive(false);
         tpc.isDialogue = false;
