@@ -115,14 +115,27 @@ public class PlayerStats : MonoBehaviour
         if (SavedData.PlayerDead && !SavedData.NewGame)
         {
             LoadStats();
+        }
+
+        if (SavedData.PlayerDead)
+        {
+            LoadTime();
             SavedData.PlayerDead = false;
         }
-        
+
+        if (SavedData.NextLevel)
+        {
+            LoadStats();
+            SavedData.NextLevel = false;
+        }
+
     }
 
     // Update is called once per frame
     void Update()
     {
+
+
         if (Health <= 0)
         {
             SavedData.LoadedSeconds = TotalSeconds;
@@ -191,6 +204,7 @@ public class PlayerStats : MonoBehaviour
         {
             if (deathtimer > 5)
             {
+                SavedData.LoadedSeconds = TotalSeconds;
                 SavedData.PlayerDead = true;
                 MainMenuManager.instance.ResetLevel1();
             }
@@ -273,7 +287,7 @@ public class PlayerStats : MonoBehaviour
             EXP = EXP - MaxEXP;
             level++;
             
-            MaxHealth = MaxHealth + Random.Range(40, 50);
+            MaxHealth = MaxHealth + Random.Range(15, 30);
             Health = MaxHealth;
 
             LowerAttackDamage += 4;
@@ -345,5 +359,10 @@ public class PlayerStats : MonoBehaviour
 
         if (SavedData.LoadedFreeChest3) FreeChest3 = true;
         if (!SavedData.LoadedFreeChest3) FreeChest3 = false;
+    }
+
+    public void LoadTime()
+    {
+        Seconds = SavedData.LoadedSeconds;
     }
 }

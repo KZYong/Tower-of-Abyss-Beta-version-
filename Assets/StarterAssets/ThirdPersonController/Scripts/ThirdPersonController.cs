@@ -151,6 +151,7 @@ namespace StarterAssets
         public bool MenuDone;
         public GameObject ConfirmPanel;
         public GameObject ConfirmPanel2;
+        public bool isSetting;
 
         public GameObject FloatingTextHeal;
         public GameObject HealingEffect;
@@ -161,6 +162,7 @@ namespace StarterAssets
 
         public bool canChest;
         public GameObject InteractUI;
+        public GameObject InteractUI2;
         public GameObject TheChest;
         ActivateChest Chest;
 
@@ -226,7 +228,7 @@ namespace StarterAssets
         private void Update()
         {
             StartLockTime += Time.deltaTime;
-            if (StartLockTime >= 0.5 && !DoneStart)
+            if (StartLockTime >= 0.25 && !DoneStart)
             {
                 LockAction = false;
                 LockCameraPosition = false;
@@ -359,8 +361,11 @@ namespace StarterAssets
 
             if (_playerInput.actions["Menu"].ReadValue<float>() == 1f && MenuDone == true)
             {
-                ResumeGame();
-                MenuOpened = false;
+                if (!isSetting)
+                {
+                    ResumeGame();
+                    MenuOpened = false;
+                }
             }
 
 
@@ -387,11 +392,20 @@ namespace StarterAssets
             }
 
             if (canChest == true)
+            {
                 InteractUI.SetActive(true);
+                InteractUI2.SetActive(true);
+            }
             if (canSave == true)
+            {
                 InteractUI.SetActive(true);
+                InteractUI2.SetActive(true);
+            }
             if (canChest == false && canSave == false)
+            {
                 InteractUI.SetActive(false);
+                InteractUI2.SetActive(false);
+            }
 
 
             if (_playerInput.actions["Interact"].ReadValue<float>() == 1f && !isAttack && isHit == false && !isSkill && !LockAction)

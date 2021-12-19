@@ -53,6 +53,8 @@ public class SavedData : MonoBehaviour
     public static bool KeyboardMode;
     public static bool GamepadMode;
 
+    public static bool NextLevel;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -70,6 +72,11 @@ public class SavedData : MonoBehaviour
         {
             LoadData();
             LoadStats = false;
+        }
+
+        if (NewGame == true)
+        {
+            StartDialogue = false;
         }
     }
 

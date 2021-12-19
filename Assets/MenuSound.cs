@@ -6,6 +6,7 @@ public class MenuSound : MonoBehaviour
 {
     public AudioSource ButtonSound;
     public AudioSource StartButtonSound;
+    public AudioSource MoveButtonSound;
 
     LoadGame game;
 
@@ -42,5 +43,10 @@ public class MenuSound : MonoBehaviour
         {
             StartButtonSound.Play();
         }
+    }
+
+    public void MoveSFX()
+    {
+        MoveButtonSound.Play();
     }
 }

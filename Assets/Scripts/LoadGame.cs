@@ -39,6 +39,11 @@ public class LoadGame : MonoBehaviour
     public Button QuitButton;
     public Button YesButton;
     public Button NoButton;
+    public TMPro.TMP_Dropdown ResolutionButton;
+    public GameObject SettingCanvas;
+    public GameObject SettingPanel;
+    public Animator SettingAnim;
+    public bool isSetting;
 
     public bool SaveExist;
 
@@ -58,6 +63,7 @@ public class LoadGame : MonoBehaviour
 
         blackscreenanimator.Play("FadeIn");
         ConfirmNewGameAnim = ConfirmNewGame.GetComponent<Animator>();
+        SettingAnim = SettingPanel.GetComponent<Animator>();
     }
 
     // Update is called once per frame
@@ -131,6 +137,15 @@ public class LoadGame : MonoBehaviour
             }
             
         }
+
+        if (MenuAction.actions["ESC"].ReadValue<float>() >= 1f)
+        {
+            if (isSetting)
+            {
+                CloseSettings();
+            }
+
+        }
     }
 
     public void LoadGameScene()
@@ -149,6 +164,7 @@ public class LoadGame : MonoBehaviour
         SavedData.Load = true;
         SavedData.LoadStats = true;
         SavedData.MenuLoad = true;
+        SavedData.NewGame = false;
     }
 
     public void QuitGame()
@@ -197,5 +213,35 @@ public class LoadGame : MonoBehaviour
         {
             ConfirmButton();
         }
+    }
+
+    public void Settings()
+    {
+        SettingCanvas.SetActive(true);
+        SettingPanel.SetActive(true);
+        SettingAnim.Play("PopOut");
+
+        NewButton.interactable = false;
+        ContButton.interactable = false;
+        SettingsButton.interactable = false;
+        QuitButton.interactable = false;
+
+        ResolutionButton.Select();
+
+        isSetting = true;
+    }
+
+    public void CloseSettings()
+    {
+        SettingCanvas.SetActive(false);
+        SettingPanel.SetActive(false);
+        SettingsButton.Select();
+
+        NewButton.interactable = true;
+        ContButton.interactable = true;
+        SettingsButton.interactable = true;
+        QuitButton.interactable = true;
+
+        isSetting = false;
     }
 }

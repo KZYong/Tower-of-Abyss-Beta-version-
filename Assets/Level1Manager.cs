@@ -6,6 +6,9 @@ public class Level1Manager : MonoBehaviour
 {
     public PlayerStats PlayerS;
 
+    public GameObject KeyboardUI;
+    public GameObject GamepadUI;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -17,6 +20,16 @@ public class Level1Manager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        if (SavedData.KeyboardMode)
+        {
+            KeyboardUI.SetActive(true);
+            GamepadUI.SetActive(false);
+        }
+
+        if (SavedData.GamepadMode)
+        {
+            KeyboardUI.SetActive(false);
+            GamepadUI.SetActive(true);
+        }
     }
 }

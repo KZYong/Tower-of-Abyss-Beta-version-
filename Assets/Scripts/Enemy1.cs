@@ -91,6 +91,10 @@ public class Enemy1 : MonoBehaviour
     private float OriginalPositionY;
     private float OriginalPositionZ;
 
+    public bool walking;
+    public float walktimer;
+    CountEnemy enemycounter;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -104,6 +108,8 @@ public class Enemy1 : MonoBehaviour
         EnemyCounter = FindObjectOfType<CountEnemy>();
 
         IndicatorAnim = Indicator.GetComponent<Animator>();
+
+        enemycounter = FindObjectOfType<CountEnemy>();
 
         OriginalPositionX = transform.position.x;
         OriginalPositionX = transform.position.y;
@@ -277,7 +283,10 @@ public class Enemy1 : MonoBehaviour
             eHealth = eMaxHealth;
         }
 
-        enemyanim.Play("Walk");
+
+
+
+            enemyanim.Play("Idle");
 
         GetComponent<NavMeshAgent>().speed = 3;
 
@@ -290,17 +299,21 @@ public class Enemy1 : MonoBehaviour
 
         //Walkpoint reached
         if (distanceToWalkPoint.magnitude < 1f)
+        {
+            enemyanim.Play("Idle");
             walkPointSet = false;
+        }
     }
 
     private void SearchWalkPoint()
     {
+
         float randomZ = Random.Range(-walkPointRange, walkPointRange);
         float randomX = Random.Range(-walkPointRange, walkPointRange);
 
         walkPoint = new Vector3(transform.position.x + randomX, transform.position.y, transform.position.z + randomZ);
 
-        if (Physics.Raycast(walkPoint, -transform.up, 2f, whatisGround))
+        //if (Physics.Raycast(walkPoint, -transform.up, 2f, whatisGround))
             walkPointSet = true;
     }
 

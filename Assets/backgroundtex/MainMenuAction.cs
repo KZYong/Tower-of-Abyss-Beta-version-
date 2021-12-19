@@ -25,6 +25,14 @@ public class @MainMenuAction : IInputActionCollection, IDisposable
                     ""expectedControlType"": """",
                     ""processors"": """",
                     ""interactions"": """"
+                },
+                {
+                    ""name"": ""ESC"",
+                    ""type"": ""Button"",
+                    ""id"": ""aac191fb-03e8-4454-b370-bf7d5784ff5a"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
                 }
             ],
             ""bindings"": [
@@ -181,6 +189,17 @@ public class @MainMenuAction : IInputActionCollection, IDisposable
                     ""action"": ""PressAnyKey"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""096eca50-25d4-4c30-92eb-d8adae5b622e"",
+                    ""path"": ""<Keyboard>/escape"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""ESC"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         },
@@ -228,6 +247,7 @@ public class @MainMenuAction : IInputActionCollection, IDisposable
         // MainMenu
         m_MainMenu = asset.FindActionMap("MainMenu", throwIfNotFound: true);
         m_MainMenu_PressAnyKey = m_MainMenu.FindAction("PressAnyKey", throwIfNotFound: true);
+        m_MainMenu_ESC = m_MainMenu.FindAction("ESC", throwIfNotFound: true);
         // Game
         m_Game = asset.FindActionMap("Game", throwIfNotFound: true);
         m_Game_DialogueNext = m_Game.FindAction("DialogueNext", throwIfNotFound: true);
@@ -281,11 +301,13 @@ public class @MainMenuAction : IInputActionCollection, IDisposable
     private readonly InputActionMap m_MainMenu;
     private IMainMenuActions m_MainMenuActionsCallbackInterface;
     private readonly InputAction m_MainMenu_PressAnyKey;
+    private readonly InputAction m_MainMenu_ESC;
     public struct MainMenuActions
     {
         private @MainMenuAction m_Wrapper;
         public MainMenuActions(@MainMenuAction wrapper) { m_Wrapper = wrapper; }
         public InputAction @PressAnyKey => m_Wrapper.m_MainMenu_PressAnyKey;
+        public InputAction @ESC => m_Wrapper.m_MainMenu_ESC;
         public InputActionMap Get() { return m_Wrapper.m_MainMenu; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -298,6 +320,9 @@ public class @MainMenuAction : IInputActionCollection, IDisposable
                 @PressAnyKey.started -= m_Wrapper.m_MainMenuActionsCallbackInterface.OnPressAnyKey;
                 @PressAnyKey.performed -= m_Wrapper.m_MainMenuActionsCallbackInterface.OnPressAnyKey;
                 @PressAnyKey.canceled -= m_Wrapper.m_MainMenuActionsCallbackInterface.OnPressAnyKey;
+                @ESC.started -= m_Wrapper.m_MainMenuActionsCallbackInterface.OnESC;
+                @ESC.performed -= m_Wrapper.m_MainMenuActionsCallbackInterface.OnESC;
+                @ESC.canceled -= m_Wrapper.m_MainMenuActionsCallbackInterface.OnESC;
             }
             m_Wrapper.m_MainMenuActionsCallbackInterface = instance;
             if (instance != null)
@@ -305,6 +330,9 @@ public class @MainMenuAction : IInputActionCollection, IDisposable
                 @PressAnyKey.started += instance.OnPressAnyKey;
                 @PressAnyKey.performed += instance.OnPressAnyKey;
                 @PressAnyKey.canceled += instance.OnPressAnyKey;
+                @ESC.started += instance.OnESC;
+                @ESC.performed += instance.OnESC;
+                @ESC.canceled += instance.OnESC;
             }
         }
     }
@@ -345,6 +373,7 @@ public class @MainMenuAction : IInputActionCollection, IDisposable
     public interface IMainMenuActions
     {
         void OnPressAnyKey(InputAction.CallbackContext context);
+        void OnESC(InputAction.CallbackContext context);
     }
     public interface IGameActions
     {

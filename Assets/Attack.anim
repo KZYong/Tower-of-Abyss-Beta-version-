@@ -33472,14 +33472,14 @@ AnimationClip:
   m_HasMotionFloatCurves: 0
   m_Events:
   - time: 0
-    functionName: FaceEnemy
+    functionName: StopThirdHit
     data: 
     objectReferenceParameter: {fileID: 0}
     floatParameter: 0
     intParameter: 0
     messageOptions: 0
   - time: 0
-    functionName: StopThirdHit
+    functionName: FaceEnemy
     data: 
     objectReferenceParameter: {fileID: 0}
     floatParameter: 0
@@ -33500,14 +33500,14 @@ AnimationClip:
     intParameter: 0
     messageOptions: 0
   - time: 0.26666668
-    functionName: StartDamage
+    functionName: Swing1
     data: 
     objectReferenceParameter: {fileID: 0}
     floatParameter: 0
     intParameter: 0
     messageOptions: 0
   - time: 0.26666668
-    functionName: Swing1
+    functionName: StartDamage
     data: 
     objectReferenceParameter: {fileID: 0}
     floatParameter: 0
