@@ -39,6 +39,12 @@ public class Dialogue : MonoBehaviour
             tpc.DialogueDone = true;
         }
 
+        if (SavedData.NextLevel)
+        {
+            SavedData.StartDialogue = false;
+        }
+
+
         if (DialoguePressed)
         {
             DialogueTimer += Time.deltaTime;

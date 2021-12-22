@@ -170,6 +170,9 @@ namespace StarterAssets
         public GameObject TheSave;
         SaveNPC Save;
 
+        public bool canPortal;
+        public GameObject ThePortal;
+
         public float itemCD;
         public bool itemUsed;
 
@@ -187,6 +190,23 @@ namespace StarterAssets
 
         public Button ReturnButton;
 
+        public GameObject NextFloorUI;
+        public GameObject NextFloorPanel;
+        public Animator NextFloorPanelAnim;
+        public bool NextFloor;
+        public Button NextFloorYes;
+
+        public bool CanNPC;
+        public GameObject TheNPC;
+        public GameObject NPCDialogue;
+        LeverDialogue lever;
+
+        public bool isCutScene;
+
+        public GameObject Lever1;
+        public GameObject Lever2;
+        public MinigameClear minigameclear;
+
         private void Awake()
         {
             // get a reference to our main camera
@@ -202,6 +222,7 @@ namespace StarterAssets
 
         private void Start()
         {
+            NextFloorPanelAnim = NextFloorPanel.GetComponent<Animator>();
             ECounter = FindObjectOfType<CountEnemy>();
             _hasAnimator = TryGetComponent(out _animator);
             _controller = GetComponent<CharacterController>();
@@ -223,10 +244,13 @@ namespace StarterAssets
             LockCameraPosition = true;
 
             SavingDialogue = SaveDialogue.GetComponent<DialogueSystem>();
+            lever = NPCDialogue.GetComponent<LeverDialogue>();
         }
 
         private void Update()
         {
+            minigameclear = FindObjectOfType<MinigameClear>();
+
             StartLockTime += Time.deltaTime;
             if (StartLockTime >= 0.25 && !DoneStart)
             {
@@ -259,7 +283,7 @@ namespace StarterAssets
             if (!LockAction)
                 Cursor.lockState = CursorLockMode.Locked;
 
-            if (PlayerS.Health <= 0 && DeathAnim == false)
+            if (PlayerS.Health <= 0.49 && DeathAnim == false)
             {
                 PlayerDeath = true;
                 _animator.SetTrigger("Death");
@@ -325,7 +349,7 @@ namespace StarterAssets
                 DialogueDone = false;
             }
 
-            if (_playerInput.actions["Menu"].ReadValue<float>() == 1f && MenuOpened == false && !PlayerDeath && !isDialogue)
+            if (_playerInput.actions["Menu"].ReadValue<float>() == 1f && MenuOpened == false && !PlayerDeath && !isDialogue && !NextFloor && !isCutScene)
                 if (CursorTimer > 0.5)
                 {
                     Cursor.lockState = CursorLockMode.None;
@@ -401,14 +425,24 @@ namespace StarterAssets
                 InteractUI.SetActive(true);
                 InteractUI2.SetActive(true);
             }
-            if (canChest == false && canSave == false)
+            if (canPortal == true)
+            {
+                InteractUI.SetActive(true);
+                InteractUI2.SetActive(true);
+            }
+            if (CanNPC == true)
+            {
+                InteractUI.SetActive(true);
+                InteractUI2.SetActive(true);
+            }
+            if (canChest == false && canSave == false && canPortal == false && CanNPC == false)
             {
                 InteractUI.SetActive(false);
                 InteractUI2.SetActive(false);
             }
 
 
-            if (_playerInput.actions["Interact"].ReadValue<float>() == 1f && !isAttack && isHit == false && !isSkill && !LockAction)
+            if (_playerInput.actions["Interact"].ReadValue<float>() == 1f && !isAttack && isHit == false && !isSkill && !LockAction && !isCutScene)
             {
                 if (canChest == true)
                 {
@@ -424,6 +458,33 @@ namespace StarterAssets
                     //Save = TheSave.GetComponent<SaveNPC>();
                     //Save.Saving = true;
                     //Debug.Log("Game Saved!");
+                }
+
+                if (canPortal == true && Grounded && !CountEnemy.InBattle)
+                {
+                    LockCameraPosition = true;
+                    LockAction = true;
+                    NextFloorPanel.SetActive(true);
+                    NextFloorUI.SetActive(true);
+                    NextFloorPanelAnim.Play("PopOut");
+                    NextFloor = true;
+                    Cursor.lockState = CursorLockMode.None;
+                    NextFloorYes.Select();
+                }
+
+                if (CanNPC == true && Grounded && !CountEnemy.InBattle)
+                {
+                    if (TheNPC == Lever1 )
+                    {
+                        isDialogue = true;
+                        NPCDialogue.SetActive(true);
+                        lever.StartDialogue();
+                    }
+
+                    if (TheNPC == Lever2)
+                    {
+                        minigameclear.MiniGameClear();
+                    }
                 }
             }
 
@@ -503,7 +564,7 @@ namespace StarterAssets
                 }
             }
 
-            if (_playerInput.actions["Skill1"].ReadValue<float>() == 1f && isHit == false && !LockAction && !Skilled)
+            if (_playerInput.actions["Skill1"].ReadValue<float>() == 1f && isHit == false && !LockAction && !Skilled && !isAttack && !isGuard)
             {
                 if (Grounded == true)
                 {
@@ -604,6 +665,7 @@ namespace StarterAssets
         public void EndDamage()
         {
             isDamage = false;
+
         }
 
         public void FaceEnemy()
@@ -756,6 +818,11 @@ namespace StarterAssets
                 targetSpeed = 1f;
             }
 
+            if (isSkill == true)
+            {
+                targetSpeed = 1f;
+            }
+
             // a simplistic acceleration and deceleration designed to be easy to remove, replace, or iterate upon
 
             // note: Vector2's == operator uses approximation so is not floating point error prone, and is cheaper than magnitude
@@ -899,5 +966,17 @@ namespace StarterAssets
             // when selected, draw a gizmo in the position of, and matching radius of, the grounded collider
             Gizmos.DrawSphere(new Vector3(transform.position.x, transform.position.y - GroundedOffset, transform.position.z), GroundedRadius);
         }
+
+        public void CloseNextFloor()
+        {
+            LockCameraPosition = false;
+            LockAction = false;
+            NextFloorPanel.SetActive(false);
+            NextFloorUI.SetActive(false);
+            NextFloor = false;
+            Cursor.lockState = CursorLockMode.Locked;
+        }
     }
+
+
 }

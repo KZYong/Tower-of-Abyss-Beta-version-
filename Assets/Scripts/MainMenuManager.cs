@@ -39,6 +39,28 @@ public class MainMenuManager : MonoBehaviour
         StartCoroutine(GetSceneLoadProgress());
     }
 
+    public void LoadLevel2()
+    {
+        PersistentCamera.SetActive(true);
+        loadingScreen.SetActive(true);
+
+        scenesLoading.Add(SceneManager.UnloadSceneAsync((int)SceneIndexes.TITLE_SCREEN));
+        scenesLoading.Add(SceneManager.LoadSceneAsync((int)SceneIndexes.LEVEL2, LoadSceneMode.Additive));
+
+        StartCoroutine(GetSceneLoadProgress());
+    }
+
+    public void MoveLevel2()
+    {
+        PersistentCamera.SetActive(true);
+        loadingScreen.SetActive(true);
+
+        scenesLoading.Add(SceneManager.UnloadSceneAsync((int)SceneIndexes.SANDBOX));
+        scenesLoading.Add(SceneManager.LoadSceneAsync((int)SceneIndexes.LEVEL2, LoadSceneMode.Additive));
+
+        StartCoroutine(GetSceneLoadProgress());
+    }
+
     public void BackToMainMenu()
     {
         PersistentCamera.SetActive(true);
@@ -47,6 +69,19 @@ public class MainMenuManager : MonoBehaviour
         Time.timeScale = 1f;
 
         scenesLoading.Add(SceneManager.UnloadSceneAsync((int)SceneIndexes.SANDBOX));
+        scenesLoading.Add(SceneManager.LoadSceneAsync((int)SceneIndexes.TITLE_SCREEN, LoadSceneMode.Additive));
+
+        StartCoroutine(GetSceneLoadProgress());
+    }
+
+    public void BackToMainMenu2()
+    {
+        PersistentCamera.SetActive(true);
+        loadingScreen.SetActive(true);
+
+        Time.timeScale = 1f;
+
+        scenesLoading.Add(SceneManager.UnloadSceneAsync((int)SceneIndexes.LEVEL2));
         scenesLoading.Add(SceneManager.LoadSceneAsync((int)SceneIndexes.TITLE_SCREEN, LoadSceneMode.Additive));
 
         StartCoroutine(GetSceneLoadProgress());
@@ -61,6 +96,19 @@ public class MainMenuManager : MonoBehaviour
 
         scenesLoading.Add(SceneManager.UnloadSceneAsync((int)SceneIndexes.SANDBOX));
         scenesLoading.Add(SceneManager.LoadSceneAsync((int)SceneIndexes.SANDBOX, LoadSceneMode.Additive));
+
+        StartCoroutine(GetSceneLoadProgress());
+    }
+
+    public void ResetLevel2()
+    {
+        PersistentCamera.SetActive(true);
+        loadingScreen.SetActive(true);
+
+        Time.timeScale = 1f;
+
+        scenesLoading.Add(SceneManager.UnloadSceneAsync((int)SceneIndexes.LEVEL2));
+        scenesLoading.Add(SceneManager.LoadSceneAsync((int)SceneIndexes.LEVEL2, LoadSceneMode.Additive));
 
         StartCoroutine(GetSceneLoadProgress());
     }

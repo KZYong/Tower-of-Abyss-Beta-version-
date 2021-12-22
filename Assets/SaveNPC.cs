@@ -77,11 +77,25 @@ public class SaveNPC : MonoBehaviour
 			if (PlayerS.FreeChest3) SavedData.LoadedFreeChest3 = true;
 			if (!PlayerS.FreeChest3) SavedData.LoadedFreeChest3 = false;
 
+			if (PlayerS.FreeChest4) SavedData.LoadedFreeChest4 = true;
+			if (!PlayerS.FreeChest4) SavedData.LoadedFreeChest4 = false;
+
+			if (PlayerS.FreeChest5) SavedData.LoadedFreeChest5 = true;
+			if (!PlayerS.FreeChest5) SavedData.LoadedFreeChest5 = false;
+
 
 			SavedData.LoadStage = PlayerS.ThisStage;
 
 			if (SavedData.NewGame)
 				SavedData.NewGame = false;
+
+			SavedData.NewGame = false;
+			SavedData.StartDialogue = true;
+
+			if (SavedData.NextLevel)
+			{
+				SavedData.StartDialogue = false;
+			}
 
 			//
 
@@ -130,6 +144,7 @@ public class SaveNPC : MonoBehaviour
 			SavedData.LoadedHPPot1, SavedData.LoadedHPPot2,
 			SavedData.LoadedCamp1, SavedData.LoadedCamp2, SavedData.LoadedCamp3, SavedData.LoadedCamp4, SavedData.LoadedCamp5, SavedData.LoadedCamp6,
 			SavedData.LoadedCamp7, SavedData.LoadedFreeChest1, SavedData.LoadedFreeChest2, SavedData.LoadedFreeChest3,
+			SavedData.LoadedFreeChest4, SavedData.LoadedFreeChest5,
 			SavedData.StartDialogue
 			);
 		BinaryFormatter bf = new BinaryFormatter();

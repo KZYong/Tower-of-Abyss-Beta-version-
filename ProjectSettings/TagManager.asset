@@ -9,6 +9,7 @@ TagManager:
   - Enemy
   - EnemyInRange
   - MainPlayer
+  - Orb
   layers:
   - Default
   - TransparentFX

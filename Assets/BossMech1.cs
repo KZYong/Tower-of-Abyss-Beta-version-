@@ -1,0 +1,78 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class BossMech1 : MonoBehaviour
+{
+    public bool isAttack;
+    public bool isAttackHit;
+
+    public GameObject MainEnemy;
+    public GameObject EnemyWeapon;
+
+    Boss Enemy;
+    public BossHitBox EH;
+
+    public GameObject hiteffect;
+    // Start is called before the first frame update
+    void Start()
+    {
+        Enemy = MainEnemy.GetComponent<Boss>();
+        EH = EnemyWeapon.GetComponent<BossHitBox>();
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+    }
+
+    public void StartAttack()
+    {
+        isAttack = true;
+        isAttackHit = false;
+        Enemy.isAttacking = true;
+    }
+
+    public void EndAttack()
+    {
+        isAttack = false;
+        isAttackHit = false;
+    }
+
+    public void StartHit()
+    {
+        isAttackHit = true;
+    }
+
+    public void EndHit()
+    {
+        isAttackHit = false;
+    }
+
+    public void EndAttacking()
+    {
+        Enemy.isAttacking = false;
+        isAttack = false;
+    }
+
+    public void DebugAttack()
+    {
+        EH.EnemyCanAttack = false;
+    }
+
+    public void Attacking()
+    {
+        Enemy.isAttacking = true;
+    }
+
+    public void IndicatorOff()
+    {
+        Enemy.Indicator.SetActive(false);
+    }
+
+    public void HittingGround()
+    {
+        GameObject hObject = Instantiate(hiteffect, new Vector3(transform.position.x, (transform.position.y), transform.position.z), Quaternion.identity) as GameObject;
+        Destroy(hObject, 1);
+    }
+}

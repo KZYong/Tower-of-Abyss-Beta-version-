@@ -70,7 +70,7 @@ public class DialogueSystem : MonoBehaviour
                 DialoguePressed = true;
             }
 
-            if (index == 1)
+            if (index == 1 && !DialoguePressed)
             {
                 if (textComponent.text == lines[index])
                 {
@@ -88,7 +88,7 @@ public class DialogueSystem : MonoBehaviour
                 DownArrow.SetActive(false);
             }
 
-            if (index == 2)
+            if (index == 2 && !DialoguePressed)
             {
                 if (textComponent.text == lines[index])
                 {

@@ -34,6 +34,8 @@ public class SavedData : MonoBehaviour
     public static bool LoadedFreeChest1;
     public static bool LoadedFreeChest2;
     public static bool LoadedFreeChest3;
+    public static bool LoadedFreeChest4;
+    public static bool LoadedFreeChest5;
 
     public static int LoadStage;
 
@@ -59,13 +61,21 @@ public class SavedData : MonoBehaviour
     void Start()
     {
 
-
       
     }
 
     // Update is called once per frame
     void Update()
     {
+        if (NextLevel)
+        {
+            Debug.Log("Next Level is True!");
+        }
+
+        if (!NextLevel)
+        {
+            Debug.Log("Oh no not true anymore");
+        }
         // Debug.Log("Current Saved Position is " + LoadedPositionX + "," + LoadedPositionY + "," + LoadedPositionZ);
 
         if (LoadStats == true)
@@ -77,6 +87,22 @@ public class SavedData : MonoBehaviour
         if (NewGame == true)
         {
             StartDialogue = false;
+        }
+
+        if (NextLevel == true)
+        {
+            LoadedCamp1 = false;
+            LoadedCamp2 = false;
+            LoadedCamp3 = false;
+            LoadedCamp4 = false;
+            LoadedCamp5 = false;
+            LoadedCamp6 = false;
+            LoadedCamp7 = false;
+            LoadedFreeChest1 = false;
+            LoadedFreeChest2 = false;
+            LoadedFreeChest3 = false;
+            LoadedFreeChest4 = false;
+            LoadedFreeChest5 = false;
         }
     }
 
@@ -122,6 +148,8 @@ public class SavedData : MonoBehaviour
         LoadedFreeChest1 = data.FreeChest1;
         LoadedFreeChest2 = data.FreeChest2;
         LoadedFreeChest3 = data.FreeChest3;
+        LoadedFreeChest4 = data.FreeChest4;
+        LoadedFreeChest5 = data.FreeChest5;
         StartDialogue = data.FirstDialogue;
 
         //Debug.Log("Saved Position is " + data.positionX + "," + data.positionY + "," + data.positionZ); 

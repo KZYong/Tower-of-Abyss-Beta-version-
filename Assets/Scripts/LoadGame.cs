@@ -108,6 +108,13 @@ public class LoadGame : MonoBehaviour
                         Debug.Log("I am loading Saved Game!");
                         MainMenuManager.instance.LoadGame();
                     }
+
+                    if (SavedData.LoadStage == 2)
+                    {
+                        SavedData.NewGame = false;
+                        Debug.Log("I am loading Saved Game!");
+                        MainMenuManager.instance.LoadLevel2();
+                    }
                 }
 
                 if (!SavedData.MenuLoad)

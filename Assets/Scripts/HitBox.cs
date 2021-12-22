@@ -52,7 +52,10 @@ public class HitBox : MonoBehaviour
     public float AttackCD;
 
     public GameObject TargetEnemy;
+    public GameObject Boss;
 
+    Boss Bosser;
+    ExplosionOrb Orb;
 
     // Start is called before the first frame update
     void Start()
@@ -63,7 +66,6 @@ public class HitBox : MonoBehaviour
 
         PlayerS = FindObjectOfType<PlayerStats>();
         
-
     }
 
     // Update is called once per frame
@@ -103,6 +105,18 @@ public class HitBox : MonoBehaviour
             TargetEnemy = other.gameObject;
             DamageEnemy();
         }
+
+        if (other.gameObject.tag == "Orb" && HisAttack == true && canDamage == true)
+        {
+            TargetEnemy = other.gameObject;
+            DamageOrb();
+            Debug.Log("Collided with Orb!");
+        }
+        if (other.gameObject.tag == "Orb" && HisJumpAttack == true && canDamage == true)
+        {
+            TargetEnemy = other.gameObject;
+            DamageOrb();
+        }
     }
 
     public void DamageEnemy()
@@ -113,14 +127,17 @@ public class HitBox : MonoBehaviour
 
         Enemy = TargetEnemy.GetComponent<Enemy1>();
 
+        if (TargetEnemy == Boss)
+            Bosser = TargetEnemy.GetComponent<Boss>();
 
         //take damage
         if (Enemy.isDeath == false && !AttackDone)
         {
-
-
             GameObject hObject = Instantiate(hiteffect, new Vector3(TargetEnemy.transform.position.x, (player.transform.position.y + 1), TargetEnemy.transform.position.z), Quaternion.Euler(new Vector3(90, Random.Range(0, 360), 0))) as GameObject;
             Destroy(hObject, 1);
+
+            if (TargetEnemy == Boss)
+                hObject.transform.localScale = new Vector3(2f, 2f, 2f);
 
             damagetaken = Random.Range(LAttack, UAttack);
 
@@ -140,8 +157,18 @@ public class HitBox : MonoBehaviour
             {
                 damagetaken = damagetaken * 2;
                 Debug.Log("Skill Hit!");
-                Enemy.Debuffed = true;
-                Enemy.eDefense -= 35;
+
+                if (TargetEnemy != Boss)
+                {
+                    Enemy.Debuffed = true;
+                    Enemy.eDefense -= 35;
+                }
+
+                if (TargetEnemy == Boss)
+                {
+                    Bosser.Debuffed = true;
+                    Bosser.eDefense -= 35;
+                }
 
                 DebuffSound.Play();
 
@@ -150,14 +177,21 @@ public class HitBox : MonoBehaviour
 
             if (!tpc.isSkillHit)
             {
-                enemyDef = Enemy.eDefense;
+                if (TargetEnemy != Boss)
+                    enemyDef = Enemy.eDefense;
+                if (TargetEnemy == Boss)
+                    enemyDef = Bosser.eDefense;
+
                 DefPercent = 1 - (enemyDef / 100);
                 damagetaken = damagetaken * DefPercent;
             }
 
+            if (TargetEnemy != Boss)
             Enemy.eHealth = Enemy.eHealth - damagetaken;
+            if (TargetEnemy == Boss && !Bosser.isImmune)
+                Bosser.eHealth = Bosser.eHealth - damagetaken;
 
-            if (Enemy.isAttacking == false)
+            if (Enemy.isAttacking == false && TargetEnemy != Boss)
             {
                 Enemy.enemyanim.SetTrigger("Damaged");
                 Enemy.isDamage = true;
@@ -165,27 +199,103 @@ public class HitBox : MonoBehaviour
                 Enemy.Indicator.SetActive(false);
             }
 
-            if (isCrit)
-                CritSound.Play();
-
-            if (!isCrit)
-                HitSound.Play();
+            if (TargetEnemy != Boss)
+            {
+                if (isCrit)
+                    CritSound.Play();
+                if (!isCrit)
+                    HitSound.Play();
+            }
+            if (TargetEnemy == Boss && !Bosser.isImmune)
+            {
+                if (isCrit)
+                    CritSound.Play();
+                if (!isCrit)
+                    HitSound.Play();
+            }
             //damage end
 
             //floating text
             if (isCrit == false)
             {
-                var go = Instantiate(FloatingTextPrefab, new Vector3((TargetEnemy.transform.position.x), (player.transform.position.y + 2), TargetEnemy.transform.position.z), Quaternion.identity);
-                go.GetComponent<TextMeshPro>().text = damagetaken.ToString("F0");
+                if (TargetEnemy != Boss)
+                {
+                    var go = Instantiate(FloatingTextPrefab, new Vector3((TargetEnemy.transform.position.x), (player.transform.position.y + 2), TargetEnemy.transform.position.z), Quaternion.identity);
+                    go.GetComponent<TextMeshPro>().text = damagetaken.ToString("F0");
+                }
+                if (TargetEnemy == Boss && !Bosser.isImmune)
+                {
+                    var go = Instantiate(FloatingTextPrefab, new Vector3((TargetEnemy.transform.position.x+1), (player.transform.position.y + 3), (TargetEnemy.transform.position.z+1)), Quaternion.identity);
+                    go.GetComponent<TextMeshPro>().text = damagetaken.ToString("F0");
+                }
             }
 
             if (isCrit == true)
             {
-                var go = Instantiate(FloatingTextPrefabCrit, new Vector3((TargetEnemy.transform.position.x), (player.transform.position.y + 2), TargetEnemy.transform.position.z), Quaternion.identity);
-                go.GetComponent<TextMeshPro>().text = damagetaken.ToString("F0") + "<size=%25>critical!</size>";
-                isCrit = false;
+                if (TargetEnemy != Boss)
+                {
+                    var go = Instantiate(FloatingTextPrefabCrit, new Vector3((TargetEnemy.transform.position.x), (player.transform.position.y + 2), TargetEnemy.transform.position.z), Quaternion.identity);
+                    go.GetComponent<TextMeshPro>().text = damagetaken.ToString("F0") + "<size=%25>critical!</size>";
+                    isCrit = false;
+                }
+                if (TargetEnemy == Boss && !Bosser.isImmune)
+                {
+                    var go = Instantiate(FloatingTextPrefabCrit, new Vector3((TargetEnemy.transform.position.x+1), (player.transform.position.y + 3), (TargetEnemy.transform.position.z+1)), Quaternion.identity);
+                    go.GetComponent<TextMeshPro>().text = damagetaken.ToString("F0") + "<size=%25>critical!</size>";
+                    isCrit = false;
+                }
             }
 
+            if (TargetEnemy != Boss)
+            {
+                combonum.combonumber = combonum.combonumber + 1;
+                combonum.combotime = 0;
+                combonum.comboAnim.SetTrigger("ComboNumTrigger");
+
+                combonum.totaldamage = combonum.totaldamage + damagetaken;
+            }
+
+
+            if (TargetEnemy == Boss && !Bosser.isImmune)
+            {
+                combonum.combonumber = combonum.combonumber + 1;
+                combonum.combotime = 0;
+                combonum.comboAnim.SetTrigger("ComboNumTrigger");
+
+                combonum.totaldamage = combonum.totaldamage + damagetaken;
+            }
+
+            if (!tpc.isSkillHit)
+            AttackDone = true;
+        }
+    }
+
+    public void DamageOrb()
+    {
+        GameObject hObject = Instantiate(hiteffect, new Vector3(TargetEnemy.transform.position.x, (player.transform.position.y + 1), TargetEnemy.transform.position.z), Quaternion.Euler(new Vector3(90, Random.Range(0, 360), 0))) as GameObject;
+        Destroy(hObject, 1);
+
+        Orb = TargetEnemy.GetComponent<ExplosionOrb>();
+
+        damagetaken = Random.Range(LAttack, UAttack);
+
+        if (tpc.isThirdHit == true)
+            damagetaken = damagetaken * 2;
+
+        if (tpc.isSkillHit == true)
+        {
+            damagetaken = damagetaken * 2;
+            Debug.Log("Skill Hit!");
+        }
+
+        Orb.OrbHealth = Orb.OrbHealth - damagetaken;
+
+        HitSound.Play();
+
+        //damage end
+            var go = Instantiate(FloatingTextPrefab, new Vector3((TargetEnemy.transform.position.x), (player.transform.position.y + 2), TargetEnemy.transform.position.z), Quaternion.identity);
+            go.GetComponent<TextMeshPro>().text = damagetaken.ToString("F0");
+        //floating text
 
             combonum.combonumber = combonum.combonumber + 1;
             combonum.combotime = 0;
@@ -193,8 +303,7 @@ public class HitBox : MonoBehaviour
 
             combonum.totaldamage = combonum.totaldamage + damagetaken;
 
-            if (!tpc.isSkillHit)
+        if (!tpc.isSkillHit)
             AttackDone = true;
-        }
     }
 }

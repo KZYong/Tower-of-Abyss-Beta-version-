@@ -95,6 +95,8 @@ public class Enemy1 : MonoBehaviour
     public float walktimer;
     CountEnemy enemycounter;
 
+    public bool BossStage;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -159,6 +161,9 @@ public class Enemy1 : MonoBehaviour
 
         if (PlayerDetected == false)
             sightRange = 8;
+
+        if (BossStage == true)
+            sightRange = 50;
 
 
         /// debugtimer += Time.deltaTime;
@@ -261,7 +266,7 @@ public class Enemy1 : MonoBehaviour
                 if (!parrytimesound)
                 {
                     ParrySound.Play();
-                    Player.Stamina -= Random.Range(35, 50);
+                    Player.Stamina -= Random.Range(30, 45);
                 }
 
                 parrytimesound = true;
@@ -382,10 +387,6 @@ public class Enemy1 : MonoBehaviour
     private void ResetAttack()
     {
         alreadyAttacked = false;
-
-        var Renderer = this.GetComponent<Renderer>();
-
-        Renderer.material.SetColor("_Color", Color.white);
 
         GetComponent<NavMeshAgent>().speed = 6;
     }

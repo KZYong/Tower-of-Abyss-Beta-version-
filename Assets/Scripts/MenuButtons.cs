@@ -11,12 +11,14 @@ public class MenuButtons : MonoBehaviour
     public Button NoButton1;
     public Button NoButton2;
     public Button ReturnButton;
- 
+
+    public PlayerStats PlayerS;
+
 
     // Start is called before the first frame update
     void Start()
     {
-
+        PlayerS = FindObjectOfType<PlayerStats>();
     }
 
     // Update is called once per frame
@@ -40,7 +42,12 @@ public class MenuButtons : MonoBehaviour
     public void Confirm()
     {
         Time.timeScale = 1;
-        MainMenuManager.instance.BackToMainMenu();
+
+        if (PlayerS.ThisStage == 1)
+            MainMenuManager.instance.BackToMainMenu();
+
+        if (PlayerS.ThisStage == 2)
+            MainMenuManager.instance.BackToMainMenu2();
     }
 
     public void Cancel()

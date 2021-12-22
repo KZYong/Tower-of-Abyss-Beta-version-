@@ -34,10 +34,12 @@ public class NewStats
     public bool FreeChest1;
     public bool FreeChest2;
     public bool FreeChest3;
+    public bool FreeChest4;
+    public bool FreeChest5;
 
     public NewStats(int stage, float posX, float posY, float posZ, float HP, float MaxHP, int Level, float EXP, float MaxEXP, 
         float CritRate, float Def, float Sec, float AttL, float AttH, int Pot1, int Pot2, bool C1, bool C2, bool C3, bool C4, bool C5,
-        bool C6, bool C7, bool FC1, bool FC2, bool FC3,
+        bool C6, bool C7, bool FC1, bool FC2, bool FC3, bool FC4, bool FC5,
         bool FirstDia)
     {
         positionX = posX;
@@ -66,6 +68,8 @@ public class NewStats
         FreeChest1 = FC1;
         FreeChest2 = FC2;
         FreeChest3 = FC3;
+        FreeChest4 = FC4;
+        FreeChest5 = FC5;
         FirstDialogue = FirstDia;
     }
 }

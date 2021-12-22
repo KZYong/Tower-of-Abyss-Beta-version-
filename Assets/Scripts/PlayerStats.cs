@@ -82,12 +82,15 @@ public class PlayerStats : MonoBehaviour
     public int ThisStage;
 
     CampManager campmanage;
+    CampManager2 campmanage2;
 
     public bool Camp1; public bool Camp2; public bool Camp3; public bool Camp4; public bool Camp5; public bool Camp6; public bool Camp7;
-    public bool FreeChest1; public bool FreeChest2; public bool FreeChest3;
+    public bool FreeChest1; public bool FreeChest2; public bool FreeChest3; public bool FreeChest4; public bool FreeChest5;
 
+    SaveNPC Save;
     void Start()
     {
+        Save = FindObjectOfType<SaveNPC>();
         StaminaAnim = StaminaWarning.GetComponent<Animator>();
 
         tpc = GetComponent<StarterAssets.ThirdPersonController>();
@@ -98,6 +101,8 @@ public class PlayerStats : MonoBehaviour
         DeadPanelAnim = DeadPanel.GetComponent<Animator>();
 
         campmanage = FindObjectOfType<CampManager>();
+
+        campmanage2 = FindObjectOfType<CampManager2>();
 
         Player = GameObject.FindWithTag("MainPlayer");
 
@@ -126,7 +131,10 @@ public class PlayerStats : MonoBehaviour
         if (SavedData.NextLevel)
         {
             LoadStats();
-            SavedData.NextLevel = false;
+            Save.Saving = true;
+            //SavedData.NextLevel = false;
+            SavedData.StartDialogue = false;
+            Debug.Log("Loading Next level Stats!");
         }
 
     }
@@ -135,8 +143,7 @@ public class PlayerStats : MonoBehaviour
     void Update()
     {
 
-
-        if (Health <= 0)
+        if (Health <= 0.49)
         {
             SavedData.LoadedSeconds = TotalSeconds;
 
@@ -206,7 +213,12 @@ public class PlayerStats : MonoBehaviour
             {
                 SavedData.LoadedSeconds = TotalSeconds;
                 SavedData.PlayerDead = true;
+
+                if (ThisStage == 1)
                 MainMenuManager.instance.ResetLevel1();
+
+                if (ThisStage == 2)
+                MainMenuManager.instance.ResetLevel2();
             }
         }
 
@@ -310,6 +322,7 @@ public class PlayerStats : MonoBehaviour
 
     public void LoadStats()
     {
+        if (!SavedData.NextLevel)
         Player.transform.position = new Vector3(LastPositionX, LastPositionY, LastPositionZ);
 
         //PlayerInformation Initialize
@@ -349,7 +362,11 @@ public class PlayerStats : MonoBehaviour
         if (SavedData.LoadedCamp7) Camp7 = true;
         if (!SavedData.LoadedCamp7) Camp7 = false;
 
+        if (ThisStage == 1)
         campmanage.LoadCamp();
+
+        if (ThisStage == 2)
+        campmanage2.LoadCamp();
 
         if (SavedData.LoadedFreeChest1) FreeChest1 = true;
         if (!SavedData.LoadedFreeChest1) FreeChest1 = false;
@@ -359,6 +376,11 @@ public class PlayerStats : MonoBehaviour
 
         if (SavedData.LoadedFreeChest3) FreeChest3 = true;
         if (!SavedData.LoadedFreeChest3) FreeChest3 = false;
+
+        if (SavedData.NextLevel)
+        {
+            SavedData.StartDialogue = false;
+        }
     }
 
     public void LoadTime()
